@@ -1,0 +1,156 @@
+[gd_scene load_steps=8 format=3 uid="uid://8rgjicfdvqhp"]
+
+[ext_resource type="Texture2D" uid="uid://dwdx3y18mesh8" path="res://Assets/Background_Images/Welcome_Background.png" id="1_28flt"]
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="3_1ehe0"]
+[ext_resource type="Theme" uid="uid://daxpr5eeopje0" path="res://Assets/Theme/main_menu_btn.tres" id="3_ce3w2"]
+[ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface Scenes/Connection_Interface.tscn" id="4_ce3w2"]
+
+[sub_resource type="Animation" id="Animation_1ehe0"]
+resource_name = "idle_btn"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(940, 620), Vector2(940, 625)]
+}
+
+[sub_resource type="Animation" id="Animation_ce3w2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(939.5, 603.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ce3w2"]
+_data = {
+&"RESET": SubResource("Animation_ce3w2"),
+&"idle_btn": SubResource("Animation_1ehe0")
+}
+
+[node name="Main Menu" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Static UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Baclground Image" type="TextureRect" parent="CanvasLayer/Static UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1106.5
+offset_top = -623.5
+offset_right = 1106.5
+offset_bottom = 623.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_28flt")
+expand_mode = 1
+
+[node name="Game Label" type="RichTextLabel" parent="CanvasLayer/Static UI"]
+custom_minimum_size = Vector2(250, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -50.0
+offset_right = 125.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("3_1ehe0")
+theme_override_font_sizes/normal_font_size = 50
+text = "Raid Pixel"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UI Buttons" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LinkButton" type="LinkButton" parent="CanvasLayer/UI Buttons"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = -73.0
+offset_right = 291.0
+offset_bottom = -33.0
+grow_vertical = 0
+tooltip_text = "https://github.com/JohnRendell/raid-pixel"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_1ehe0")
+theme_override_font_sizes/font_size = 20
+action_mode = 0
+button_mask = 3
+text = "Check out Github Repo"
+underline = 1
+uri = "https://github.com/JohnRendell/raid-pixel"
+
+[node name="Play Button" type="Button" parent="CanvasLayer/UI Buttons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.5
+offset_top = 63.5
+offset_right = 20.5
+offset_bottom = 94.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("3_ce3w2")
+action_mode = 0
+button_mask = 3
+text = "Play"
+icon_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/UI Buttons/Play Button"]
+libraries = {
+&"": SubResource("AnimationLibrary_ce3w2")
+}
+autoplay = "idle_btn"
+
+[node name="Connection_Interface" parent="CanvasLayer" instance=ExtResource("4_ce3w2")]

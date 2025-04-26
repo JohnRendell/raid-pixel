@@ -1,0 +1,27 @@
+{
+  "name": "raid-pixel",
+  "version": "1.0.0",
+  "description": "A 2D game for desktop and mobiles (Android) built with Godot and Express.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon Server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnRendell/raid-pixel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JohnRendell/raid-pixel/issues"
+  },
+  "homepage": "https://github.com/JohnRendell/raid-pixel#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "ws": "^8.18.1"
+  }
+}

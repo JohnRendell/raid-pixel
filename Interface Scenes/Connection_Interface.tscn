@@ -1,0 +1,179 @@
+[gd_scene load_steps=12 format=3 uid="uid://dno6galxv43l5"]
+
+[ext_resource type="Script" uid="uid://cx6mmmebbr73y" path="res://Scripts/Socket_Scripts/socket_status.gd" id="1_840yh"]
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_r6658"]
+[ext_resource type="Texture2D" uid="uid://dketm3etbrl2y" path="res://Assets/Sprite_Animations/Connecting_anim.png" id="2_rwmrq"]
+[ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="4_p5osy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3w600"]
+bg_color = Color(0, 0, 0, 0.196078)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r6658"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="Animation" id="Animation_rwmrq"]
+resource_name = "Connecting_Anim"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_840yh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_p5osy"]
+resource_name = "Disconnected_Anim"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5, 2, 2.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_j4jgh"]
+resource_name = "Disconnected_Anim_con"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_p5osy"]
+_data = {
+&"Connecting_Anim": SubResource("Animation_rwmrq"),
+&"Disconnected_Anim": SubResource("Animation_p5osy"),
+&"Disconnected_Anim_con": SubResource("Animation_j4jgh"),
+&"RESET": SubResource("Animation_840yh")
+}
+
+[node name="Connection_Interface" type="Control"]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_840yh")
+
+[node name="Background Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3w600")
+
+[node name="Panel" type="Panel" parent="Background Panel"]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -269.0
+offset_top = -89.0
+offset_right = 269.0
+offset_bottom = 89.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r6658")
+
+[node name="Status Label" type="RichTextLabel" parent="Background Panel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -134.5
+offset_top = -20.0
+offset_right = 134.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_r6658")
+theme_override_font_sizes/normal_font_size = 20
+text = "Status Connection"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite" type="Sprite2D" parent="Background Panel/Panel"]
+texture_filter = 1
+position = Vector2(16, 46)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_rwmrq")
+centered = false
+hframes = 3
+vframes = 4
+region_rect = Rect2(104, 72, 112, 144)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Background Panel/Panel/Sprite"]
+libraries = {
+&"": SubResource("AnimationLibrary_p5osy")
+}
+autoplay = "Connecting_Anim"
+speed_scale = 2.0
+
+[node name="Reconnect Button" type="Button" parent="Background Panel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.5
+offset_top = 30.0
+offset_right = 52.5
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_p5osy")
+text = "Reconnect"
+
+[connection signal="animation_finished" from="Background Panel/Panel/Sprite/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
