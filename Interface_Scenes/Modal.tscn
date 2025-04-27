@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6t8xx3gr8l6u"]
+
+[ext_resource type="Script" uid="uid://c382exretigu4" path="res://Scripts/Component_Scripts/modal_script.gd" id="1_2gg76"]
+[ext_resource type="Texture2D" uid="uid://bmd3ng803m6f5" path="res://Assets/Web_UI_Components/close_button.png" id="1_e73ql"]
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="3_faomv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64dyc"]
+bg_color = Color(0, 0, 0, 0.196078)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e73ql"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[node name="Modal" type="Control"]
+z_index = 18
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2gg76")
+
+[node name="Background Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_64dyc")
+
+[node name="Panel" type="Panel" parent="Background Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -669.0
+offset_top = -393.5
+offset_right = 669.0
+offset_bottom = 393.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_e73ql")
+
+[node name="Close Button" type="Button" parent="Background Panel/Panel"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -66.0
+offset_top = 17.0
+offset_right = -16.0
+offset_bottom = 67.0
+grow_horizontal = 0
+mouse_default_cursor_shape = 2
+action_mode = 0
+icon = ExtResource("1_e73ql")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Modal Label" type="RichTextLabel" parent="Background Panel/Panel"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 17.0
+offset_right = 100.0
+offset_bottom = 57.0
+grow_horizontal = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("3_faomv")
+theme_override_font_sizes/normal_font_size = 30
+text = "Modal Title"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cx6mmmebbr73y" path="res://Scripts/Socket_Scripts/socket_status.gd" id="1_840yh"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_r6658"]
 [ext_resource type="Texture2D" uid="uid://dketm3etbrl2y" path="res://Assets/Sprite_Animations/Connecting_anim.png" id="2_rwmrq"]
-[ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="4_p5osy"]
+[ext_resource type="Theme" uid="uid://baplrp3fy6wpv" path="res://Assets/Theme/Proceed_Button.tres" id="4_s3l0u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3w600"]
 bg_color = Color(0, 0, 0, 0.196078)
@@ -30,21 +30,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [0, 1, 2, 3]
-}
-
-[sub_resource type="Animation" id="Animation_840yh"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_p5osy"]
@@ -80,6 +65,21 @@ tracks/0/keys = {
 "values": [6, 7, 8, 9]
 }
 
+[sub_resource type="Animation" id="Animation_840yh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_p5osy"]
 _data = {
 &"Connecting_Anim": SubResource("Animation_rwmrq"),
@@ -89,7 +89,7 @@ _data = {
 }
 
 [node name="Connection_Interface" type="Control"]
-z_index = 10
+z_index = 20
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -173,7 +173,7 @@ offset_right = 52.5
 offset_bottom = 70.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_p5osy")
+theme = ExtResource("4_s3l0u")
 text = "Reconnect"
 
 [connection signal="animation_finished" from="Background Panel/Panel/Sprite/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
