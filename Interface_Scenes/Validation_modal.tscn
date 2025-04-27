@@ -1,0 +1,108 @@
+[gd_scene load_steps=7 format=3 uid="uid://d0o2bdbmktvg3"]
+
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_6hh2u"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hw6jw"]
+bg_color = Color(0, 0, 0, 0.196078)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6hh2u"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="Animation" id="Animation_6hh2u"]
+resource_name = "Validation_Modal_Anim"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(606.5, 38), Vector2(606.5, 60)]
+}
+
+[sub_resource type="Animation" id="Animation_8aqqk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(606.5, 38)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8aqqk"]
+_data = {
+&"RESET": SubResource("Animation_8aqqk"),
+&"Validation_Modal_Anim": SubResource("Animation_6hh2u")
+}
+
+[node name="Validation Modal" type="Control"]
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hw6jw")
+
+[node name="Panel" type="Panel" parent="Background Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -353.5
+offset_top = 38.0
+offset_right = 353.5
+offset_bottom = 97.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6hh2u")
+
+[node name="Label" type="RichTextLabel" parent="Background Panel/Panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_6hh2u")
+theme_override_font_sizes/normal_font_size = 20
+text = "Validating..."
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Background Panel/Panel"]
+libraries = {
+&"": SubResource("AnimationLibrary_8aqqk")
+}
+autoplay = "Validation_Modal_Anim"

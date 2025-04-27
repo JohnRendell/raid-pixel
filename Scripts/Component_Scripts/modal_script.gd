@@ -8,13 +8,13 @@ extends Node
 
 func _ready() -> void:
 	modal_panel.visible = false
-	modal_close_button.connect("button_down", func (): modal_status(false))
+	modal_close_button.connect("pressed", func (): modal_status(false))
 	modal_label.text = label
 	
 func modal_status(status: bool):
 	modal_panel.visible = status
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
 	
 	if socket_status == "Disconnected":
