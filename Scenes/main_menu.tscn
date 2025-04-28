@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=4 uid="uid://8rgjicfdvqhp"]
+[gd_scene load_steps=33 format=4 uid="uid://8rgjicfdvqhp"]
 
 [ext_resource type="Texture2D" uid="uid://dwdx3y18mesh8" path="res://Assets/Background_Images/Welcome_Background.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://dr316xe76b3yx" path="res://Scripts/Main_Menu_Scripts/menu_script.gd" id="1_opfnp"]
@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://baplrp3fy6wpv" path="res://Assets/Theme/Proceed_Button.tres" id="7_cp0ys"]
 [ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="8_yhxw7"]
 [ext_resource type="PackedScene" uid="uid://d0o2bdbmktvg3" path="res://Interface_Scenes/Validation_modal.tscn" id="9_trj04"]
+[ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_16hvj"]
 
 [sub_resource type="Animation" id="Animation_ce3w2"]
 length = 0.001
@@ -2275,3 +2276,5 @@ action_mode = 0
 text = "Log in as Guest"
 
 [node name="Validation Modal" parent="CanvasLayer" instance=ExtResource("9_trj04")]
+
+[node name="Loading Interface" parent="CanvasLayer" instance=ExtResource("10_16hvj")]

@@ -10,15 +10,21 @@ extends Node
 @onready var login_proceed_btn = $"CanvasLayer/Log in Modal/Proceed Button"
 @onready var username_input = $"CanvasLayer/Log in Modal/Username Input"
 @onready var password_input = $"CanvasLayer/Log in Modal/Password Input"
+@onready var guest_proceed_btn = $"CanvasLayer/Log in Modal/Guest Button Log in"
 
 #validation modal
 @onready var validation_modal = $"CanvasLayer/Validation Modal"
 
+#loading modal
+@onready var loading_modal = $"CanvasLayer/Loading Interface"
+
 func _ready() -> void:
 	warning_text.text = ""
 	validation_modal.visible = false
+	loading_modal.visible = false
 	
 	play_btn.connect("pressed", func (): login_modal.modal_status(true))
+	guest_proceed_btn.connect("pressed", login_as_guest)
 	login_proceed_btn.connect("pressed", proceed_login)
 	
 func _process(_delta: float) -> void:
@@ -26,6 +32,30 @@ func _process(_delta: float) -> void:
 	
 	if not socket_status == "Connected":
 		validation_modal.visible = false
+
+func login_as_guest():
+	PlayerGlobalScript.player_in_game_name = "Guest_%s" % [string_generator()]
+	PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
+	
+	loading_modal.visible = true
+	loading_modal.load("res://Scenes/lobby_scene.tscn")
+	
+func string_generator():
+	var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+	"m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+	var nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	
+	var randomNum = RandomNumberGenerator.new()
+	var result : String = ""
+	
+	for i in range(2):
+		var char_index = randomNum.randi_range(0, len(letters) - 1)
+		var num_index = randomNum.randi_range(0, len(nums) - 1)
+		
+		var temp_name = "%s%s" % [letters[char_index], nums[num_index]]
+		result += temp_name
+	
+	return result
 
 func proceed_login():
 	if not username_input.text or not password_input.text:
@@ -36,8 +66,12 @@ func proceed_login():
 		var account_validate_result = await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/validateAccount", { "username": username_input.text, "password": password_input.text })
 		
 		if account_validate_result["status"] == "Account found":
-			print("Going to the lobby")
+			loading_modal.visible = true
+			
+			PlayerGlobalScript.player_in_game_name = account_validate_result["inGameName"]
+			PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
+			
+			loading_modal.load("res://Scenes/lobby_scene.tscn")
 
 		warning_text.text = "" if account_validate_result["status"] == "Account found" else "Username or Password Incorrect"
-		print(account_validate_result["status"])
 		validation_modal.visible = false

@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 WebsocketsConnection="*res://Scripts/Global_Scripts/websockets_connection.gd"
 ServerFetch="*res://Scripts/Global_Scripts/server_fetch.gd"
+PlayerGlobalScript="*res://Scripts/Global_Scripts/player_global_script.gd"
 
 [display]
 
