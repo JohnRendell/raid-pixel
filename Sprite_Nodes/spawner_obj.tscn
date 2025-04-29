@@ -1,0 +1,86 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3fy2yoewjeff"]
+
+[ext_resource type="Texture2D" uid="uid://bepc07ch8vofu" path="res://Assets/Sprite_Animations/Spawner.png" id="1_27kyy"]
+[ext_resource type="Script" uid="uid://dynacbdoxryv" path="res://Scripts/Player_Scripts/player_spawn.gd" id="1_41euf"]
+
+[sub_resource type="Animation" id="Animation_27kyy"]
+resource_name = "spawner_idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_41euf"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_o2rrh"]
+resource_name = "spawner_spawn"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_41euf"]
+_data = {
+&"RESET": SubResource("Animation_41euf"),
+&"spawner_idle": SubResource("Animation_27kyy"),
+&"spawner_spawn": SubResource("Animation_o2rrh")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_27kyy"]
+size = Vector2(84, 16)
+
+[node name="Spawner Body" type="CharacterBody2D"]
+z_index = 1
+script = ExtResource("1_41euf")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_27kyy")
+offset = Vector2(0, -40)
+hframes = 8
+vframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+libraries = {
+&"": SubResource("AnimationLibrary_41euf")
+}
+autoplay = "spawner_idle"
+speed_scale = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -23)
+shape = SubResource("RectangleShape2D_27kyy")
+disabled = true
+
+[connection signal="animation_finished" from="Sprite/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

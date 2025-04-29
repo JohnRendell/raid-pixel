@@ -58,7 +58,12 @@ func string_generator():
 	return result
 
 func proceed_login():
+	var username_input_style = username_input.get_theme_stylebox("normal")
+	var password_input_style = password_input.get_theme_stylebox("normal")
+	
 	if not username_input.text or not password_input.text:
+		username_input_style.border_color = "red"
+		password_input_style.border_color = "red"
 		warning_text.text = "Fields are empty!"
 	else:
 		validation_modal.visible = true
@@ -73,5 +78,8 @@ func proceed_login():
 			
 			loading_modal.load("res://Scenes/lobby_scene.tscn")
 
+		username_input_style.border_color = "black" if account_validate_result["status"] == "Account found" else "red"
+		password_input_style.border_color = "black" if account_validate_result["status"] == "Account found" else "red"
+		
 		warning_text.text = "" if account_validate_result["status"] == "Account found" else "Username or Password Incorrect"
 		validation_modal.visible = false
