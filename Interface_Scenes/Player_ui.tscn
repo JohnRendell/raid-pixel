@@ -1,0 +1,101 @@
+[gd_scene load_steps=5 format=3 uid="uid://1hn556jfmqmu"]
+
+[ext_resource type="Script" uid="uid://cn4bw1ftm35t0" path="res://Scripts/Component_Scripts/player_UI_script.gd" id="1_3owcf"]
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_y421c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1fpyu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3owcf"]
+
+[node name="Player UI" type="Control"]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3owcf")
+
+[node name="Coordinates" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+offset_left = 14.0
+offset_top = 57.0
+offset_right = 314.0
+offset_bottom = 107.0
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 20
+text = "Player posX: 0
+Player posY: 0"
+fit_content = true
+scroll_active = false
+vertical_alignment = 1
+
+[node name="Player Count" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+offset_left = 16.0
+offset_top = 13.0
+offset_right = 316.0
+offset_bottom = 53.0
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 20
+text = "Active player/s: 0"
+fit_content = true
+scroll_active = false
+vertical_alignment = 1
+
+[node name="Display Message Panel" type="Panel" parent="."]
+layout_mode = 1
+offset_left = 4.0
+offset_top = 148.0
+offset_right = 644.0
+offset_bottom = 494.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1fpyu")
+
+[node name="Global Messages" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+offset_top = 134.0
+offset_right = 650.0
+offset_bottom = 527.0
+
+[node name="Display Messages" type="ScrollContainer" parent="Global Messages"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -640.0
+offset_bottom = 357.0
+grow_horizontal = 0
+
+[node name="HBoxContainer" type="VBoxContainer" parent="Global Messages/Display Messages"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Message label" type="RichTextLabel" parent="Global Messages/Display Messages/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 20
+text = "Test user: test message"
+fit_content = true
+scroll_active = false
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Global Messages"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 650.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("1_y421c")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_3owcf")
+placeholder_text = "Type a message..."
+max_length = 30

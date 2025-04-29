@@ -6,3 +6,10 @@ var player_game_id: String
 
 #activation of the sprite of main player
 var main_player_spawned = false
+
+#Position of the main player
+var player_pos_X = 0
+var player_pos_Y = 0
+
+#for player's movement restrict when modal is open
+var isModalOpen = false

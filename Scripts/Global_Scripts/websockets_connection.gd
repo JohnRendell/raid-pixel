@@ -9,7 +9,7 @@ extends Node
 var socket = WebSocketPeer.new()
 
 # for sending data to backend
-var socket_data: JSON
+var socket_data: Dictionary
 
 #connection status
 var socket_connection_status: String
