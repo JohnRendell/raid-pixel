@@ -31,10 +31,6 @@ func _process(_delta):
 		WebSocketPeer.STATE_OPEN:
 			socket_connection_status = "Connected";
 			
-			while socket.get_available_packet_count() > 0:
-				var raw = socket.get_packet().get_string_from_utf8()
-				socket_data = JSON.parse_string(raw)
-			
 		#for connecting
 		WebSocketPeer.STATE_CONNECTING:
 			socket_connection_status = "Connecting to server";

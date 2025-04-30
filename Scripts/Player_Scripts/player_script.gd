@@ -5,7 +5,7 @@ extends PlayerMovement
 @onready var player_ign = $"Player ign"
 
 func _ready() -> void:
-	print(PlayerGlobalScript.player_game_id)
+	print("Player Game ID: %s" % [PlayerGlobalScript.player_game_id])
 	player_anim.play("front_idle_anim")
 	
 func _process(_delta: float) -> void:
@@ -42,10 +42,11 @@ func send_player_data():
 		SocketClient.send_data({
 			"Socket_Name": "Player_Spawn",
 			"Player_inGameName": PlayerGlobalScript.player_in_game_name,
+			"Player_GameID": PlayerGlobalScript.player_game_id,
 			"Player_posX": PlayerGlobalScript.player_pos_X,
 			"Player_posY": PlayerGlobalScript.player_pos_Y,
 			"isLeft": isLeft,
 			"isRight": isRight,
 			"isDown": isDown,
-			"isUp": isUp
+			"isUp": isUp,
 		})
