@@ -3,8 +3,6 @@ module.exports = (server, WebSocketServer)=>{
     const wss = new WebSocketServer({ server });
 
     wss.on('connection', (ws) => {
-        console.log('New client connected');
-
         // Listen for messages from clients
         ws.on('message', (message) => {
             let parsed_message = JSON.parse(message);
@@ -49,6 +47,18 @@ module.exports = (server, WebSocketServer)=>{
                         "isRight": parsed_message.isRight,
                         "isDown": parsed_message.isDown,
                         "isUp": parsed_message.isUp,
+                    }
+                )
+            }
+
+            //player count
+            else if(socket_name === "PlayerCount"){
+                console.log(parsed_message)
+                broadcastSocket(
+                    wss,
+                    {
+                        "Socket_Name": socket_name,
+                        "Count": parsed_message.Count
                     }
                 )
             }

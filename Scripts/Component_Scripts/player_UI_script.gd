@@ -2,12 +2,24 @@ extends Global_Message
 
 @onready var coordinate_label = $Coordinates
 @onready var global_message_modal = $"Global Messages"
+@onready var playerCount = $"Player Count"
 
 func _ready() -> void:
 	global_message_modal.visible = false
 	timer_label.visible = false
-
+	
+	#get the player count and pass it to all clients
+	var count = await gameData.updatePlayerCount(1)
+	
+	if count:
+		SocketClient.send_data({
+			"Socket_Name": "PlayerCount",
+			"Count": count
+		})
+		
 func _process(_delta: float) -> void:
+	playerCount.text = "Active player/s: %s" % [gameData.renderPlayerCount()]
+	
 	coordinate_label.text = "Player posX: " + str("%.2f" % PlayerGlobalScript.player_pos_X) + "\nPlayer posY: " + str("%.2f" % PlayerGlobalScript.player_pos_Y)
 	
 	message_render_display()

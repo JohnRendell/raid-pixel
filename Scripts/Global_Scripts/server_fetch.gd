@@ -29,3 +29,23 @@ func send_post_request(route: String, data: Dictionary) -> Dictionary:
 	var response_json = JSON.parse_string(response_text)
 
 	return response_json
+
+#TODO: fix this get request
+func get_request(route: String) -> Dictionary:
+	var url = route
+
+	var headers = [
+		"Accept: application/json"
+	]
+
+	var err = httpRequest.request(url, headers, HTTPClient.METHOD_GET)
+	if err != OK:
+		print("Failed to send GET request")
+		return {}
+		
+	# Wait for the request to complete
+	var result = await httpRequest.request_completed
+	var response_text = result[3].get_string_from_utf8()
+	var response_json = JSON.parse_string(response_text)
+
+	return response_json if typeof(response_json) == TYPE_DICTIONARY else {}

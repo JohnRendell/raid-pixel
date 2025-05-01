@@ -46,6 +46,7 @@ app.get('/', (req, res) => {
 
 //Routers
 app.use("/accountRoute", require("./accountRoutes"));
+app.use("/gameData", require("./gameDataRoute"));
 
 //websockets
 require("./websocket")(expressServer, WebSocketServer)

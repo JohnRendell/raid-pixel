@@ -23,7 +23,7 @@ func _process(_delta: float) -> void:
 		if not stored_players.has(data.get("Player_GameID")):
 			stored_players[data.get("Player_GameID")] = {
 				"Player": player,
-				"Position": Vector2(280.0, 4.0)
+				"Position": Vector2(2351.0, -161.0)
 			}
 			
 			spawner_animation.play("spawner_spawn")

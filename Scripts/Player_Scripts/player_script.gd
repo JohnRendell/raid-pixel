@@ -3,6 +3,7 @@ extends PlayerMovement
 @onready var player_anim = $"Player Sprite/AnimationPlayer"
 @onready var player_sprite = $"Player Sprite"
 @onready var player_ign = $"Player ign"
+@onready var player_camera = $"Camera2D"
 
 func _ready() -> void:
 	print("Player Game ID: %s" % [PlayerGlobalScript.player_game_id])

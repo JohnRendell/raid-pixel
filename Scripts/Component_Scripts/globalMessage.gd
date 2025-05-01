@@ -13,6 +13,9 @@ extends Control
 @onready var timer_label = $"Global Messages/Wait for input Label"
 @onready var timer = $"Global Messages/Timer"
 
+#for game data
+var gameData = GameData.new()
+
 var isSend = false
 
 #this is for prev data to avoid receiving a bunch
@@ -61,11 +64,12 @@ func message_render_display():
 			oldest.queue_free()
 		
 		#add a new one
-		var display_msg = message_label.duplicate()
-		display_msg.visible = true
-		display_msg.add_theme_color_override("default_color", Color("#005400"))
-		display_msg.text = data.get("Player_GameID") + " connected"
-		display_message_panel.add_child(display_msg)
+		if data.has("Player_GameID"):
+			var display_msg = message_label.duplicate()
+			display_msg.visible = true
+			display_msg.add_theme_color_override("default_color", Color("#005400"))
+			display_msg.text = data.get("Player_GameID") + " connected"
+			display_message_panel.add_child(display_msg)
 		
 	#player disconnected
 	elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Disconnect":
@@ -77,9 +81,19 @@ func message_render_display():
 			oldest.queue_free()
 		
 		#add a new one
-		var display_msg = message_label.duplicate()
-		display_msg.visible = true
-		display_msg.add_theme_color_override("default_color", Color("#ff0000"))
+		if data.has("Player_GameID"):
+			var display_msg = message_label.duplicate()
+			display_msg.visible = true
+			display_msg.add_theme_color_override("default_color", Color("#ff0000"))
 
-		display_msg.text = data.get("Player_GameID") + " disconnected"
-		display_message_panel.add_child(display_msg)
+			display_msg.text = data.get("Player_GameID") + " disconnected"
+			display_message_panel.add_child(display_msg)
+			
+		#get the player count and pass it to all clients
+		var count = await gameData.updatePlayerCount(-1)
+		
+		if count:
+			SocketClient.send_data({
+				"Socket_Name": "PlayerCount",
+				"Count": count
+			})
