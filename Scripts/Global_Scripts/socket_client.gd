@@ -15,6 +15,12 @@ func _process(_delta: float) -> void:
 		isConnected = true
 		
 	elif WebsocketsConnection.socket_connection_status == "Disconnected":
+		send_data(
+			{
+				"Socket_Name": "Player_Disonnected",
+				"Player_GameID": PlayerGlobalScript.player_game_id
+			}
+		)
 		isConnected = false
 
 func send_data(data):

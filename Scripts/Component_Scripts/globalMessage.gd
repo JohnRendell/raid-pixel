@@ -33,67 +33,60 @@ func message_append_on_container():
 		
 func message_render_display():	
 	var data = SocketClient.received_data()
+	var connection_status = WebsocketsConnection.socket_connection_status
 
-	#sending global messages
-	if data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "GlobalMessage":
-		prev_data = data
-		
-		var receiver = data.get("Receiver") + "(You)" if data.get("Receiver") == PlayerGlobalScript.player_in_game_name else data.get("Receiver")
-		var message_clone = message_label.duplicate()
-		message_clone.visible = true
-		
-		message_clone.text = receiver + ": " + data.get("Message")
-		message_container.add_child(message_clone)
-		
-		#remove old messages
-		if display_message_panel.get_child_count() >= 5:
-			var oldest = display_message_panel.get_child(0)
-			oldest.queue_free()
-		
-		#add a new one
-		var display_msg = message_clone.duplicate()
-		display_message_panel.add_child(display_msg)
-	
-	#for player connected
-	elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Connected":
-		prev_data = data
-		
-		#remove old messages
-		if display_message_panel.get_child_count() >= 5:
-			var oldest = display_message_panel.get_child(0)
-			oldest.queue_free()
-		
-		#add a new one
-		if data.has("Player_GameID"):
-			var display_msg = message_label.duplicate()
-			display_msg.visible = true
-			display_msg.add_theme_color_override("default_color", Color("#005400"))
-			display_msg.text = data.get("Player_GameID") + " connected"
-			display_message_panel.add_child(display_msg)
-		
-	#player disconnected
-	elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Disconnect":
-		prev_data = data
-		
-		#remove old messages
-		if display_message_panel.get_child_count() >= 5:
-			var oldest = display_message_panel.get_child(0)
-			oldest.queue_free()
-		
-		#add a new one
-		if data.has("Player_GameID"):
-			var display_msg = message_label.duplicate()
-			display_msg.visible = true
-			display_msg.add_theme_color_override("default_color", Color("#ff0000"))
-
-			display_msg.text = data.get("Player_GameID") + " disconnected"
-			display_message_panel.add_child(display_msg)
+	if connection_status == "Connected":
+		#sending global messages
+		if data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "GlobalMessage":
+			prev_data = data
 			
-		#get the player count and pass it to all clients
-		var count = await gameData.updatePlayerCount(-1)
+			var receiver = data.get("Receiver") + "(You)" if data.get("Receiver") == PlayerGlobalScript.player_in_game_name else data.get("Receiver")
+			var message_clone = message_label.duplicate()
+			message_clone.visible = true
+			
+			message_clone.text = receiver + ": " + data.get("Message")
+			message_container.add_child(message_clone)
+			
+			#remove old messages
+			if display_message_panel.get_child_count() >= 5:
+				var oldest = display_message_panel.get_child(0)
+				oldest.queue_free()
+			
+			#add a new one
+			var display_msg = message_clone.duplicate()
+			display_message_panel.add_child(display_msg)
 		
-		if count:
-			SocketClient.send_data({
-				"Socket_Name": "PlayerCount",
-				"Count": count
-			})
+		#for player connected
+		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Connected":
+			prev_data = data
+			
+			#remove old messages
+			if display_message_panel.get_child_count() >= 5:
+				var oldest = display_message_panel.get_child(0)
+				oldest.queue_free()
+			
+			#add a new one
+			if data.has("Player_GameID"):
+				var display_msg = message_label.duplicate()
+				display_msg.visible = true
+				display_msg.add_theme_color_override("default_color", Color("#005400"))
+				display_msg.text = data.get("Player_GameID") + " connected"
+				display_message_panel.add_child(display_msg)
+			
+		#player disconnected
+		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Disconnect":
+			prev_data = data
+			
+			#remove old messages
+			if display_message_panel.get_child_count() >= 5:
+				var oldest = display_message_panel.get_child(0)
+				oldest.queue_free()
+			
+			#add a new one
+			if data.has("Player_GameID"):
+				var display_msg = message_label.duplicate()
+				display_msg.visible = true
+				display_msg.add_theme_color_override("default_color", Color("#ff0000"))
+
+				display_msg.text = data.get("Player_GameID") + " disconnected"
+				display_message_panel.add_child(display_msg)

@@ -2,9 +2,6 @@ extends Node
 
 @onready var login_modal = $"CanvasLayer/Log in Modal"
 
-#buttons
-@onready var play_btn = $"CanvasLayer/UI Buttons/Play Button"
-
 #login modal components
 @onready var warning_text = $"CanvasLayer/Log in Modal/Warning Text"
 @onready var login_proceed_btn = $"CanvasLayer/Log in Modal/Proceed Button"
@@ -23,7 +20,6 @@ func _ready() -> void:
 	validation_modal.visible = false
 	loading_modal.visible = false
 	
-	play_btn.connect("pressed", func (): login_modal.modal_status(true))
 	guest_proceed_btn.connect("pressed", login_as_guest)
 	login_proceed_btn.connect("pressed", proceed_login)
 	
@@ -36,6 +32,8 @@ func _process(_delta: float) -> void:
 func login_as_guest():
 	PlayerGlobalScript.player_in_game_name = "Guest_%s" % [string_generator()]
 	PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
+	PlayerGlobalScript.isModalOpen = false
+	PlayerGlobalScript.current_modal_open = false
 	
 	loading_modal.visible = true
 	loading_modal.load("res://Scenes/lobby_scene.tscn")
@@ -75,6 +73,8 @@ func proceed_login():
 			
 			PlayerGlobalScript.player_in_game_name = account_validate_result["inGameName"]
 			PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
+			PlayerGlobalScript.isModalOpen = false
+			PlayerGlobalScript.current_modal_open = false
 			
 			loading_modal.load("res://Scenes/lobby_scene.tscn")
 

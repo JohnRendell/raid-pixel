@@ -2067,8 +2067,10 @@ libraries = {
 autoplay = "idle_btn"
 
 [node name="Connection_Interface" parent="CanvasLayer" instance=ExtResource("4_ce3w2")]
+visible = false
 
-[node name="Log in Modal" parent="CanvasLayer" instance=ExtResource("5_n45e2")]
+[node name="Log in Modal" parent="CanvasLayer" node_paths=PackedStringArray("modal_open_button") instance=ExtResource("5_n45e2")]
+modal_open_button = NodePath("../UI Buttons/Play Button")
 label = "Log in"
 
 [node name="Username Input" type="LineEdit" parent="CanvasLayer/Log in Modal"]
@@ -2204,6 +2206,7 @@ grow_horizontal = 2
 grow_vertical = 0
 tooltip_text = "http://localhost:8080/create_account"
 theme_override_colors/font_color = Color(5.19812e-06, 0, 0.931491, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0.933333, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0.933333, 1)
 theme_override_fonts/font = SubResource("FontFile_cp0ys")
 theme_override_font_sizes/font_size = 20

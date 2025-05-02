@@ -61,6 +61,10 @@ func established_connection():
 		# Wait for the socket to connect.
 		await get_tree().create_timer(2).timeout
 		set_process(true)
+		
+func disconnect_to_socket():
+	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		socket.close(1000, "Normal Closure")
 
 func retry_connection():
 	socket_connection_status = "Reconnecting"

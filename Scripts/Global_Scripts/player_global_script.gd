@@ -13,3 +13,9 @@ var player_pos_Y = 0
 
 #for player's movement restrict when modal is open
 var isModalOpen = false
+
+#for multiple modal flagging
+var current_modal_open = false
+
+#for player logged out
+var isLoggedOut = true
