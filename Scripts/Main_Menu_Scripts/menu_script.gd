@@ -30,6 +30,7 @@ func _process(_delta: float) -> void:
 		validation_modal.visible = false
 
 func login_as_guest():
+	PlayerGlobalScript.player_diamond = 1000.0
 	PlayerGlobalScript.player_in_game_name = "Guest_%s" % [string_generator()]
 	PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
 	PlayerGlobalScript.isModalOpen = false
@@ -70,6 +71,7 @@ func proceed_login():
 		
 		if account_validate_result["status"] == "Account found":
 			loading_modal.visible = true
+			PlayerGlobalScript.player_diamond = account_validate_result["playerDiamond"]
 			
 			PlayerGlobalScript.player_in_game_name = account_validate_result["inGameName"]
 			PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]

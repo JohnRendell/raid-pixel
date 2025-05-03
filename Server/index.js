@@ -54,5 +54,20 @@ require("./websocket")(expressServer, WebSocketServer)
 //listen to port
 const PORT = process.env.PORT;
 expressServer.listen(PORT, ()=>{
+    reset_playerCount(require("./gameDataMongooseSchema"))
+    console.log("Express server connected")
     console.log('Listening to port ' + PORT);
 });
+
+async function reset_playerCount(gameDataModel){
+    try{
+        await gameDataModel.findOneAndUpdate(
+            {},
+            { $set: { playerCount: 0 }},
+            { new: true, upsert: true }
+        )
+    }
+    catch(err){
+        console.log(err);
+    }
+}

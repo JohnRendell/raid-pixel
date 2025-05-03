@@ -12,6 +12,7 @@ route.post("/validateAccount", async (req, res)=>{
 
         let status = "Not Found";
         let inGameName = "Not Set";
+        let diamond = 0
 
         if(findAcc && findPlayerInfo){
             let passwordCorrect = await bcrypt.compare(sanitize(req.body.password), findAcc.password)
@@ -19,9 +20,10 @@ route.post("/validateAccount", async (req, res)=>{
             if(passwordCorrect){
                 status = "Account found"
                 inGameName = findPlayerInfo.inGameName
+                diamond = findPlayerInfo.diamond
             }
         }
-        res.status(200).json({ status: status, inGameName: inGameName });
+        res.status(200).json({ status: status, inGameName: inGameName, playerDiamond: diamond });
     }
     catch(err){
         console.log(err);
@@ -67,7 +69,7 @@ route.post("/createAccount", async (req, res) =>{
         }
         else{
             await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(sanitize(req.body.password)) });
-            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)] })
+            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 0 })
             status = "Success";
         }
         res.status(200).json({ status: status })

@@ -6,6 +6,7 @@ extends Global_Message
 @onready var logout_btn = $"Setting Modal/Log out Button"
 @onready var loading_modal = $"Loading Modal"
 @onready var validation_modal = $"Validation Modal"
+@onready var diamond_count_label = $"Diamond Panel/Diamond Count"
 
 func _ready() -> void:
 	logout_btn.connect("pressed", going_log_out)
@@ -18,6 +19,7 @@ func _ready() -> void:
 		
 func _process(_delta: float) -> void:
 	playerCount.text = "Active player/s: %s" % [gameData.renderPlayerCount()]
+	diamond_count_label.text = str(PlayerGlobalScript.player_diamond)
 	
 	coordinate_label.text = "Player posX: " + str("%.2f" % PlayerGlobalScript.player_pos_X) + "\nPlayer posY: " + str("%.2f" % PlayerGlobalScript.player_pos_Y)
 	

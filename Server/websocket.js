@@ -5,6 +5,8 @@ module.exports = (server, WebSocketServer)=>{
     const wss = new WebSocketServer({ server });
 
     wss.on('connection', (ws) => {
+        console.log("Client Connected")
+
         // Listen for messages from clients
         ws.on('message', async (message) => {
             let parsed_message = JSON.parse(message);

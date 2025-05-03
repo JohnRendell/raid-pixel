@@ -8,6 +8,8 @@ extends PlayerMovement
 @onready var player_health_label = $"Health Bar/label"
 var player_max_health = 100
 
+var prev_state = {}
+
 func _ready() -> void:
 	player_health_bar.value = 100
 	player_anim.play("front_idle_anim")
@@ -53,10 +55,8 @@ func _process(_delta: float) -> void:
 	
 	send_player_data()
 	
-#TODO: have a signal to the player joined, when main player stop attacking, the joined player should stop also.
 func send_player_data():
-	if isMoving or isAttacking:
-		SocketClient.send_data({
+	var current_state = {
 			"Socket_Name": "Player_Spawn",
 			"Player_inGameName": PlayerGlobalScript.player_in_game_name,
 			"Player_GameID": PlayerGlobalScript.player_game_id,
@@ -68,7 +68,10 @@ func send_player_data():
 			"isUp": isUp,
 			"player_type": PlayerGlobalScript.player_type,
 			"isAttacking": isAttacking
-		})
+		}
+	if isMoving or isAttacking or prev_state != current_state:
+		SocketClient.send_data(current_state)
+		prev_state = current_state.duplicate()
 
 func player_health_bar_status(status: float):
 	player_health_bar.value += status

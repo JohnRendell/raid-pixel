@@ -11,6 +11,9 @@ var main_player_spawned = false
 var player_pos_X = 0
 var player_pos_Y = 0
 
+#for player diamond amount
+var player_diamond: float
+
 #for player's movement restrict when modal is open
 var isModalOpen = false
 
