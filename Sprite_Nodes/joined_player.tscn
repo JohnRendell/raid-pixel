@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d21kxxttmlvfc"]
+[gd_scene load_steps=18 format=3 uid="uid://d21kxxttmlvfc"]
 
 [ext_resource type="Script" uid="uid://h2r2qor8irl2" path="res://Scripts/Player_Scripts/joined_player_script.gd" id="1_5tsll"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="2_6sl8t"]
@@ -116,19 +116,76 @@ tracks/0/keys = {
 "values": [6, 7, 8, 9]
 }
 
+[sub_resource type="Animation" id="Animation_5tsll"]
+resource_name = "side_punch_anim"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [14, 15]
+}
+
+[sub_resource type="Animation" id="Animation_6sl8t"]
+resource_name = "front_punch_anim"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [16, 17]
+}
+
+[sub_resource type="Animation" id="Animation_7pmfe"]
+resource_name = "back_punch_anim"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [18, 19]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0vxpe"]
 _data = {
 &"RESET": SubResource("Animation_0vxpe"),
 &"back_idle_anim": SubResource("Animation_m7d5h"),
+&"back_punch_anim": SubResource("Animation_7pmfe"),
 &"back_walk_anim": SubResource("Animation_ph1dw"),
 &"front_idle_anim": SubResource("Animation_0obo4"),
+&"front_punch_anim": SubResource("Animation_6sl8t"),
 &"front_walk_anim": SubResource("Animation_2bxlq"),
 &"side_idle_anim": SubResource("Animation_oyjt5"),
+&"side_punch_anim": SubResource("Animation_5tsll"),
 &"side_walk_anim": SubResource("Animation_n0hth")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0obo4"]
 size = Vector2(24, 6)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5tsll"]
+load_path = "res://.godot/imported/Sprite_Health_Empty.png-561dbb03a7364c79bd53ff9d2c2c3bb3.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6sl8t"]
+load_path = "res://.godot/imported/Sprite_Health_Main_player.png-23e39427be1d8b46faaefe99edc66fd8.ctex"
 
 [node name="Joined Player" type="CharacterBody2D"]
 z_index = 1
@@ -140,9 +197,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -75.0
-offset_top = -138.0
+offset_top = -200.0
 offset_right = 75.0
-offset_bottom = -98.0
+offset_bottom = -160.0
 grow_horizontal = 2
 theme_override_fonts/normal_font = ExtResource("2_6sl8t")
 theme_override_font_sizes/normal_font_size = 20
@@ -157,7 +214,7 @@ texture_filter = 1
 texture = ExtResource("3_7pmfe")
 offset = Vector2(0, -40)
 hframes = 7
-vframes = 2
+vframes = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player Sprite"]
 libraries = {
@@ -169,3 +226,39 @@ speed_scale = 2.0
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_0obo4")
 disabled = true
+
+[node name="Health Bar" type="TextureProgressBar" parent="."]
+texture_filter = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = -180.0
+offset_right = 100.0
+offset_bottom = -100.0
+grow_horizontal = 2
+value = 100.0
+rounded = true
+texture_under = SubResource("CompressedTexture2D_5tsll")
+texture_progress = SubResource("CompressedTexture2D_6sl8t")
+
+[node name="label" type="RichTextLabel" parent="Health Bar"]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -10.0
+offset_right = 50.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("2_6sl8t")
+theme_override_font_sizes/normal_font_size = 15
+text = "100/100"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1

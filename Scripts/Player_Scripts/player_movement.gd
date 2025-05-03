@@ -10,6 +10,8 @@ var isDown = false
 
 var isMoving = false
 
+var isAttacking = false
+
 var direction_value = 0
 
 func get_input():

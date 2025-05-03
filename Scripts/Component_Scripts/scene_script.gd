@@ -14,7 +14,11 @@ var max_scene_height_bottom: float
 
 var world_rect: Rect2
 
+@export var scene_player_type = "type of player on a scene"
+
 func _ready() -> void:
+	PlayerGlobalScript.player_type = scene_player_type
+	
 	if scene_particle:
 		scene_particle.emitting = true
 	

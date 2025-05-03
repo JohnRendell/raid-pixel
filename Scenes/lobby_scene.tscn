@@ -274,6 +274,7 @@ scene_particle = NodePath("CanvasLayer/Leaves Particle")
 main_player = NodePath("CanvasLayer/Y Sort/Main Player")
 ySort = NodePath("CanvasLayer/Y Sort")
 tileMap = NodePath("CanvasLayer/Grass Terrain")
+scene_player_type = "enemy"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true

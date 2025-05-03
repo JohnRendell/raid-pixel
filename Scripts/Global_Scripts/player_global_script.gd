@@ -17,5 +17,8 @@ var isModalOpen = false
 #for multiple modal flagging
 var current_modal_open = false
 
-#for player logged out
+#for player logged out that will validate on other script
 var isLoggedOut = true
+
+#for player type that will validate on other script
+var player_type: String

@@ -25,11 +25,12 @@ func _process(_delta: float) -> void:
 			if not stored_players.has(data.get("Player_GameID")):
 				stored_players[data.get("Player_GameID")] = {
 					"Player": player,
-					"Position": Vector2(2351.0, -161.0)
+					"Position": Vector2(2351.0, -161.0),
 				}
 				
 				spawner_animation.play("spawner_spawn")
 				player.playerIGN = data.get("Player_inGameName")
+				player.player_type = data.get("player_type")
 				ySort.add_child(player)
 			else:
 				var joined_player_data = stored_players[data.get("Player_GameID")]
@@ -40,6 +41,8 @@ func _process(_delta: float) -> void:
 				joined_player.isRight = data.get("isRight")
 				joined_player.isDown = data.get("isDown")
 				joined_player.isUp = data.get("isUp")
+				joined_player.player_type = data.get("player_type")
+				joined_player.isAttacking = data.get("isAttacking")
 				
 		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Disconnect":
 			prev_data = data

@@ -85,6 +85,8 @@ module.exports = (server, WebSocketServer)=>{
                         "isRight": parsed_message.isRight,
                         "isDown": parsed_message.isDown,
                         "isUp": parsed_message.isUp,
+                        "player_type": parsed_message.player_type,
+                        "isAttacking": parsed_message.isAttacking
                     }
                 )
             }
