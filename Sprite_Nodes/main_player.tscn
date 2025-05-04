@@ -181,7 +181,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0obo4"]
-size = Vector2(24, 6)
+size = Vector2(32.5, 12.5)
 
 [node name="Main Player" type="CharacterBody2D"]
 z_index = 1
@@ -245,7 +245,7 @@ vertical_alignment = 1
 [node name="Player Sprite" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = ExtResource("1_0obo4")
-offset = Vector2(0, -40)
+offset = Vector2(0, -50)
 hframes = 7
 vframes = 3
 
@@ -256,7 +256,8 @@ libraries = {
 speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
+position = Vector2(1.78814e-06, 6.25)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_0obo4")
 disabled = true
 

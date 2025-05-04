@@ -13,6 +13,7 @@ var prev_state = {}
 func _ready() -> void:
 	player_health_bar.value = 100
 	player_anim.play("front_idle_anim")
+
 		
 func play_punch_animation():
 	if isRight or isLeft:

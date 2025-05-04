@@ -3033,4 +3033,7 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="timeout" from="Global Messages/Timer" to="." method="_on_timer_timeout"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]

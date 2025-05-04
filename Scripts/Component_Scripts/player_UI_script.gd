@@ -7,6 +7,8 @@ extends Global_Message
 @onready var loading_modal = $"Loading Modal"
 @onready var validation_modal = $"Validation Modal"
 @onready var diamond_count_label = $"Diamond Panel/Diamond Count"
+@onready var player_profile = $"Profile"
+@onready var http_request = $"HTTPRequest"
 
 func _ready() -> void:
 	logout_btn.connect("pressed", going_log_out)
@@ -16,6 +18,10 @@ func _ready() -> void:
 	
 	timer_label.visible = false
 	loading_modal.visible = false
+	
+	#load profile image
+	var url = PlayerGlobalScript.player_profile
+	http_request.request(url)
 		
 func _process(_delta: float) -> void:
 	playerCount.text = "Active player/s: %s" % [gameData.renderPlayerCount()]
@@ -55,9 +61,15 @@ func _input(event: InputEvent) -> void:
 				global_message_input.editable = !timer_label.visible
 
 func going_log_out():
+	if FileAccess.file_exists("user://login_data.json"):
+		DirAccess.remove_absolute("user://login_data.json")
+		
 	PlayerGlobalScript.isLoggedOut = true
 	validation_modal.visible = true
 	gameData.player_logout()
+	
+	if PlayerGlobalScript.player_account_type == "Guest":
+		await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/deleteAccountGuest", { "username": PlayerGlobalScript.player_username, "login_token": PlayerGlobalScript.player_UUID })
 	
 	await get_tree().create_timer(1.0).timeout
 
@@ -74,6 +86,10 @@ func going_log_out():
 	PlayerGlobalScript.current_modal_open = false
 	PlayerGlobalScript.player_in_game_name = ""
 	PlayerGlobalScript.player_game_id = ""
+	PlayerGlobalScript.player_UUID = ""
+	PlayerGlobalScript.player_account_type = ""
+	PlayerGlobalScript.player_username = ""
+	PlayerGlobalScript.player_diamond = 0
 	
 	loading_modal.visible = true
 	loading_modal.load("res://Scenes/main_menu.tscn")
@@ -84,3 +100,16 @@ func _on_timer_timeout() -> void:
 	
 	await get_tree().process_frame
 	global_message_input.grab_focus()
+	
+func _on_http_request_request_completed(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if response_code == 200:
+		var image = Image.new()
+		var err = image.load_png_from_buffer(body)
+		
+		if err == OK:
+			var texture = ImageTexture.create_from_image(image)
+			player_profile.texture = texture
+		else:
+			print("Failed to load image from buffer:", err)
+	else:
+		print("HTTP request failed with code:", response_code)

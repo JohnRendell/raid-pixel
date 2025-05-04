@@ -179,7 +179,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0obo4"]
-size = Vector2(24, 6)
+size = Vector2(32.5, 12.5)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5tsll"]
 load_path = "res://.godot/imported/Sprite_Health_Empty.png-561dbb03a7364c79bd53ff9d2c2c3bb3.ctex"
@@ -213,7 +213,7 @@ vertical_alignment = 1
 [node name="Player Sprite" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = ExtResource("3_7pmfe")
-offset = Vector2(0, -40)
+offset = Vector2(0, -50)
 hframes = 7
 vframes = 3
 
@@ -224,7 +224,8 @@ libraries = {
 speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
+position = Vector2(-6.70552e-07, 6.25)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_0obo4")
 disabled = true
 

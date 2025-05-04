@@ -25,3 +25,13 @@ var isLoggedOut = true
 
 #for player type that will validate on other script
 var player_type: String
+
+#for username
+var player_username: String
+
+#for profile
+var player_profile: String
+
+#for player account type and UUID
+var player_account_type: String
+var player_UUID: String
