@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://1hn556jfmqmu"]
+[gd_scene load_steps=27 format=4 uid="uid://1hn556jfmqmu"]
 
 [ext_resource type="Script" uid="uid://cn4bw1ftm35t0" path="res://Scripts/Component_Scripts/player_UI_script.gd" id="1_3owcf"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_y421c"]
@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://k0dpxm60stlr" path="res://Assets/Theme/Danger_Button.tres" id="5_inwp4"]
 [ext_resource type="PackedScene" uid="uid://d0o2bdbmktvg3" path="res://Interface_Scenes/Validation_modal.tscn" id="6_s02sm"]
 [ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="6_u6ovv"]
+[ext_resource type="Theme" uid="uid://baplrp3fy6wpv" path="res://Assets/Theme/Proceed_Button.tres" id="10_whfsg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1137m"]
 bg_color = Color(0, 0, 0, 0.196078)
@@ -2755,6 +2756,40 @@ cache/0/15/0/glyphs/268435604/texture_idx = 0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3owcf"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_whfsg"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_onw0h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ip2vs"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_josa4"]
+LineEdit/colors/caret_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_placeholder_color = Color(0, 0, 0, 0.529412)
+LineEdit/constants/caret_width = 2
+LineEdit/font_sizes/font_size = 20
+LineEdit/fonts/font = ExtResource("1_y421c")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_onw0h")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_ip2vs")
+
+[sub_resource type="Theme" id="Theme_l51ix"]
+LineEdit/colors/caret_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_placeholder_color = Color(0, 0, 0, 0.529412)
+LineEdit/constants/caret_width = 2
+LineEdit/font_sizes/font_size = 20
+LineEdit/fonts/font = ExtResource("1_y421c")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_onw0h")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_ip2vs")
+
 [node name="Player UI" type="Control"]
 z_index = 10
 layout_mode = 3
@@ -3034,6 +3069,282 @@ visible = false
 layout_mode = 1
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="Guest Account connect button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -276.0
+offset_top = 13.0
+offset_right = -126.0
+offset_bottom = 53.0
+grow_horizontal = 0
+tooltip_text = "Upgrade Guest Account to Player Account"
+mouse_default_cursor_shape = 2
+theme = ExtResource("10_whfsg")
+action_mode = 0
+text = "Save My Account"
+
+[node name="Guest Warning Panel" type="Panel" parent="."]
+visible = false
+z_index = 18
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Guest Warning Panel"]
+custom_minimum_size = Vector2(500, 350)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_whfsg")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Guest Warning Panel/Panel"]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -190.0
+offset_top = 34.0
+offset_right = 190.0
+offset_bottom = 259.0
+grow_horizontal = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 20
+text = "If you're seeing this, you're using a Guest Account. This work as  regular account but the moment you log out, this account will be deleted as it is a guest account.
+
+It is recommended to create an account to save your account's progress further."
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Understand button" type="Button" parent="Guest Warning Panel/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -62.5
+offset_top = -57.0
+offset_right = 62.5
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("3_1fpyu")
+action_mode = 0
+text = "I understand"
+
+[node name="Guest Connect Account Panel" type="Panel" parent="."]
+z_index = 18
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Guest Connect Account Panel"]
+custom_minimum_size = Vector2(500, 350)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -432.0
+offset_top = -257.0
+offset_right = 432.0
+offset_bottom = 257.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_whfsg")
+
+[node name="Title" type="RichTextLabel" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(500, 20)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 23.0
+offset_right = 250.0
+offset_bottom = 48.0
+grow_horizontal = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 25
+text = "Connect Your Guest Account into Player Account"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Password Input" type="LineEdit" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -102.0
+offset_right = 150.0
+offset_bottom = -69.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_josa4")
+placeholder_text = "Password"
+alignment = 1
+max_length = 20
+caret_blink = true
+secret = true
+secret_character = "*"
+
+[node name="Password Label" type="RichTextLabel" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -59.0
+offset_right = 50.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 15
+text = "Password"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Retype Password Input" type="LineEdit" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -19.0
+offset_right = 150.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_l51ix")
+placeholder_text = "Confirm Password"
+alignment = 1
+max_length = 20
+caret_blink = true
+secret = true
+secret_character = "*"
+
+[node name="Retype Password Label" type="RichTextLabel" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 24.0
+offset_right = 100.0
+offset_bottom = 43.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 15
+text = "Retype Password"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Confirm button" type="Button" parent="Guest Connect Account Panel/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -77.5
+offset_top = -107.0
+offset_right = 77.5
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("10_whfsg")
+action_mode = 0
+text = "Connect Account"
+
+[node name="Cancel Button" type="Button" parent="Guest Connect Account Panel/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -62.5
+offset_top = -52.0
+offset_right = 62.5
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("5_inwp4")
+action_mode = 0
+text = "Cancel"
+
+[node name="Warning text" type="RichTextLabel" parent="Guest Connect Account Panel/Panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -145.5
+offset_right = 150.0
+offset_bottom = -120.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_y421c")
+theme_override_font_sizes/normal_font_size = 20
+text = "Warning Text"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="timeout" from="Global Messages/Timer" to="." method="_on_timer_timeout"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]

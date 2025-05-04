@@ -16,14 +16,8 @@ var world_rect: Rect2
 
 @export var scene_player_type = "type of player on a scene"
 
-@export var guest_warning_panel: Panel
-@export var guest_warning_panel_button: Button
-
 func _ready() -> void:
-	guest_warning_panel_button.connect("pressed", func(): guest_warning_panel.visible = false )
 	PlayerGlobalScript.player_type = scene_player_type
-	
-	guest_warning_panel.visible = true if PlayerGlobalScript.player_account_type == "Guest" else false
 	
 	if scene_particle:
 		scene_particle.emitting = true

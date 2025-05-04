@@ -68,6 +68,28 @@ let inGameName = [
     "MysticMeatball"
 ];
 
+route.post("/connectAccount", async (req, res)=>{
+    try{
+        const findAcc = await accountModel.findOneAndUpdate(
+            { username: sanitize(req.body.username) },
+            { $set: { password: hash_pass(req.body.password), account_type: "Player" } },
+            { new: true }
+        )
+
+        let status = "Not Found";
+        let account_type = "Guest";
+
+        if(findAcc){
+            status = "Success";
+            account_type = findAcc.account_type;
+        }
+        res.status(200).json({ status: status, accountType: account_type });
+    }
+    catch(err){
+        console.log(err);
+    }
+});
+
 route.post("/createAccount", async (req, res) =>{
     try{
         const findAcc = await accountModel.findOne({ username: sanitize(req.body.username) });
@@ -177,7 +199,7 @@ route.post("/deleteAccountGuest", async (req, res)=>{
         let status = "Failed";
         let login_token = req.body.login_token;
 
-        const findUser = await accountModel.findOneAndDelete({ username: req.body.username, login_token: login_token });
+        const findUser = await accountModel.findOneAndDelete({ username: req.body.username, login_token: login_token, account_type: "Guest" });
         const findPlayerInfo = await playerInfoModel.findOneAndDelete({ username: req.body.username })
 
         if(findUser && findPlayerInfo){

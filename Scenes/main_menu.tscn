@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://8rgjicfdvqhp"]
+[gd_scene load_steps=34 format=4 uid="uid://8rgjicfdvqhp"]
 
 [ext_resource type="Texture2D" uid="uid://dwdx3y18mesh8" path="res://Assets/Background_Images/Welcome_Background.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://dr316xe76b3yx" path="res://Scripts/Main_Menu_Scripts/menu_script.gd" id="1_opfnp"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="4_ce3w2"]
 [ext_resource type="PackedScene" uid="uid://b6t8xx3gr8l6u" path="res://Interface_Scenes/Modal.tscn" id="5_n45e2"]
 [ext_resource type="Theme" uid="uid://baplrp3fy6wpv" path="res://Assets/Theme/Proceed_Button.tres" id="7_cp0ys"]
+[ext_resource type="Theme" uid="uid://bxfr8qxrfbs8d" path="res://Assets/Theme/Default_LineEdit.tres" id="7_vr1f0"]
 [ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="8_yhxw7"]
 [ext_resource type="PackedScene" uid="uid://d0o2bdbmktvg3" path="res://Interface_Scenes/Validation_modal.tscn" id="9_trj04"]
 [ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_16hvj"]
@@ -47,22 +48,6 @@ _data = {
 &"RESET": SubResource("Animation_ce3w2"),
 &"idle_btn": SubResource("Animation_1ehe0")
 }
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trj04"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_opfnp"]
-content_margin_left = 10.0
-bg_color = Color(1, 1, 1, 1)
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yhxw7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5egv6"]
-content_margin_left = 10.0
-bg_color = Color(1, 1, 1, 1)
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Image" id="Image_opfnp"]
 data = {
@@ -2130,14 +2115,7 @@ offset_right = 150.0
 offset_bottom = -92.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.281187, 0.281187, 0.281187, 1)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/caret_width = 2
-theme_override_fonts/font = ExtResource("3_1ehe0")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_trj04")
-theme_override_styles/normal = SubResource("StyleBoxFlat_opfnp")
+theme = ExtResource("7_vr1f0")
 placeholder_text = "Username"
 alignment = 1
 max_length = 20
@@ -2179,14 +2157,7 @@ offset_right = 150.0
 offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.281187, 0.281187, 0.281187, 1)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/caret_width = 2
-theme_override_fonts/font = ExtResource("3_1ehe0")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_yhxw7")
-theme_override_styles/normal = SubResource("StyleBoxFlat_5egv6")
+theme = ExtResource("7_vr1f0")
 placeholder_text = "Password"
 alignment = 1
 max_length = 20

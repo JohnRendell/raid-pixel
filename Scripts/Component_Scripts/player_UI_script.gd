@@ -10,18 +10,87 @@ extends Global_Message
 @onready var player_profile = $"Profile"
 @onready var http_request = $"HTTPRequest"
 
+#for guest stuff
+@onready var guestAccountButton = $"Guest Account connect button"
+@onready var guest_warning_panel = $"Guest Warning Panel"
+@onready var guest_warning_panel_button = $"Guest Warning Panel/Panel/Understand button"
+@onready var guest_connect_account_panel = $"Guest Connect Account Panel"
+
+#inputs for account guest connect
+@onready var guest_password_input = $"Guest Connect Account Panel/Panel/Password Input"
+@onready var guest_confirm_password_input = $"Guest Connect Account Panel/Panel/Retype Password Input"
+@onready var guest_confirm_button = $"Guest Connect Account Panel/Panel/Confirm button"
+@onready var guest_back_button = $"Guest Connect Account Panel/Panel/Cancel Button"
+@onready var guest_warning_text = $"Guest Connect Account Panel/Panel/Warning text"
+
 func _ready() -> void:
 	logout_btn.connect("pressed", going_log_out)
 	
 	global_message_modal.visible = false
 	validation_modal.visible = false
+	guest_connect_account_panel.visible = false
 	
 	timer_label.visible = false
 	loading_modal.visible = false
+	guest_warning_text.visible = false
+	
+	guest_warning_panel.visible = true if PlayerGlobalScript.player_account_type == "Guest" else false
+	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
+	
+	guestAccountButton.connect("pressed", func(): status_guest_account_panel(true))
+	guest_warning_panel_button.connect("pressed", func(): guest_warning_panel.visible = false)
+	guest_back_button.connect("pressed", func(): status_guest_account_panel(false))
+	guest_confirm_button.connect("pressed", upgrade_account)
 	
 	#load profile image
 	var url = PlayerGlobalScript.player_profile
 	http_request.request(url)
+	
+func status_guest_account_panel(status: bool):
+	guest_connect_account_panel.visible = status
+	PlayerGlobalScript.isModalOpen = status
+	PlayerGlobalScript.current_modal_open = status
+	
+func upgrade_account():
+	validation_modal.visible = true
+	
+	#for inputs
+	if not guest_password_input.text or not guest_confirm_password_input.text:
+		guest_warning_text.visible = true
+		guest_warning_text.text = "Fields cannot be empty!."
+		
+		guest_password_input.get_theme_stylebox("normal").border_color = "red"
+		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
+	
+	elif len(guest_password_input.text) <= 4:
+		guest_warning_text.visible = true
+		guest_warning_text.text = "Password should be 5 characters above."
+		
+		guest_password_input.get_theme_stylebox("normal").border_color = "red"
+		
+	elif guest_password_input.text != guest_confirm_password_input.text:
+		guest_warning_text.visible = true
+		guest_warning_text.text = "Password should match."
+		
+		guest_password_input.get_theme_stylebox("normal").border_color = "red"
+		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
+		
+	else:
+		var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/connectAccount", { "username": PlayerGlobalScript.player_username, "password": guest_password_input.text })
+		
+		if result["status"] == "Success":
+			guest_connect_account_panel.visible = false
+			PlayerGlobalScript.isModalOpen = false
+			PlayerGlobalScript.current_modal_open = false
+			PlayerGlobalScript.player_account_type = result["accountType"]
+		else:
+			guest_warning_text.text = result["status"]
+			
+		guest_password_input.get_theme_stylebox("normal").border_color = "black"
+		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "black"
+		
+	validation_modal.visible = false
+	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
 		
 func _process(_delta: float) -> void:
 	playerCount.text = "Active player/s: %s" % [gameData.renderPlayerCount()]
