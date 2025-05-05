@@ -15,6 +15,7 @@ var isAttacking = false
 var playerIGN = ""
 
 var prev_pos = Vector2.ZERO
+var prev_ign = ""
 
 var player_type = ""
 
@@ -27,17 +28,19 @@ func _ready() -> void:
 	
 	player_anim.play("front_idle_anim")
 
-#TODO: fix this, not stopping when player stop attacking
 func play_punch_animation():
 	if isRight or isLeft:
-		player_anim.play("side_punch_anim")
+		play_anim("side_punch_anim")
 	elif isUp:
-		player_anim.play("back_punch_anim")
+		play_anim("back_punch_anim")
 	elif isDown:
-		player_anim.play("front_punch_anim")
+		play_anim("front_punch_anim")
 	
 func _process(_delta: float) -> void:
-	player_ign.text = playerIGN
+	if prev_ign != playerIGN:
+		prev_ign = playerIGN
+		player_ign.text = playerIGN
+		
 	var checkMovement = $".".position - prev_pos
 	var isMoving = checkMovement != Vector2.ZERO
 	prev_pos = $".".position
@@ -45,24 +48,28 @@ func _process(_delta: float) -> void:
 	if not isAttacking:
 		if isLeft or isRight:
 			if isMoving:
-				player_anim.play("side_walk_anim")
+				play_anim("side_walk_anim")
 			else:
-				player_anim.play("side_idle_anim")
+				play_anim("side_idle_anim")
 			player_sprite.flip_h = true if isLeft else false
 		
 		elif isUp:
 			if isMoving:
-				player_anim.play("back_walk_anim")
+				play_anim("back_walk_anim")
 			else:
-				player_anim.play("back_idle_anim")
+				play_anim("back_idle_anim")
 		
 		elif isDown:
 			if isMoving:
-				player_anim.play("front_walk_anim")
+				play_anim("front_walk_anim")
 			else:
-				player_anim.play("front_idle_anim")
+				play_anim("front_idle_anim")
 	else:
 		play_punch_animation()
+
+func play_anim(anim_name):
+	if player_anim.current_animation != anim_name:
+		player_anim.play(anim_name)
 
 func player_health_bar_status(status: float):
 	player_health_bar.value += status

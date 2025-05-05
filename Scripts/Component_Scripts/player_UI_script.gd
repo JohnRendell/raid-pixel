@@ -15,6 +15,8 @@ extends Global_Message
 @onready var guest_warning_panel = $"Guest Warning Panel"
 @onready var guest_warning_panel_button = $"Guest Warning Panel/Panel/Understand button"
 @onready var guest_connect_account_panel = $"Guest Connect Account Panel"
+@onready var guest_connect_success_panel = $"Connect Account Success Panel"
+@onready var guest_connect_success_panel_btn = $"Connect Account Success Panel/Panel/Ok button"
 
 #inputs for account guest connect
 @onready var guest_password_input = $"Guest Connect Account Panel/Panel/Password Input"
@@ -23,12 +25,24 @@ extends Global_Message
 @onready var guest_back_button = $"Guest Connect Account Panel/Panel/Cancel Button"
 @onready var guest_warning_text = $"Guest Connect Account Panel/Panel/Warning text"
 
+#for player profile contents
+@onready var player_in_game_name_label = $"Profile Modal/label"
+@onready var player_profile_view = $"Profile Modal/Profile View"
+
+#for passing data
+var prev_count = ""
+var prev_IGN = ""
+var prev_diamond = 0
+var prev_coordinates = Vector2.ZERO
+
 func _ready() -> void:
 	logout_btn.connect("pressed", going_log_out)
+	guest_connect_success_panel_btn.connect("pressed", func(): status_panel(false, guest_connect_success_panel))
 	
 	global_message_modal.visible = false
 	validation_modal.visible = false
 	guest_connect_account_panel.visible = false
+	guest_connect_success_panel.visible = false
 	
 	timer_label.visible = false
 	loading_modal.visible = false
@@ -37,17 +51,17 @@ func _ready() -> void:
 	guest_warning_panel.visible = true if PlayerGlobalScript.player_account_type == "Guest" else false
 	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
 	
-	guestAccountButton.connect("pressed", func(): status_guest_account_panel(true))
+	guestAccountButton.connect("pressed", func(): status_panel(true, guest_connect_account_panel))
 	guest_warning_panel_button.connect("pressed", func(): guest_warning_panel.visible = false)
-	guest_back_button.connect("pressed", func(): status_guest_account_panel(false))
+	guest_back_button.connect("pressed", func(): status_panel(false, guest_connect_account_panel))
 	guest_confirm_button.connect("pressed", upgrade_account)
 	
 	#load profile image
 	var url = PlayerGlobalScript.player_profile
 	http_request.request(url)
 	
-func status_guest_account_panel(status: bool):
-	guest_connect_account_panel.visible = status
+func status_panel(status: bool, panel: Panel):
+	panel.visible = status
 	PlayerGlobalScript.isModalOpen = status
 	PlayerGlobalScript.current_modal_open = status
 	
@@ -80,8 +94,8 @@ func upgrade_account():
 		
 		if result["status"] == "Success":
 			guest_connect_account_panel.visible = false
-			PlayerGlobalScript.isModalOpen = false
-			PlayerGlobalScript.current_modal_open = false
+			guest_connect_success_panel.visible = true
+			
 			PlayerGlobalScript.player_account_type = result["accountType"]
 		else:
 			guest_warning_text.text = result["status"]
@@ -93,10 +107,22 @@ func upgrade_account():
 	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
 		
 func _process(_delta: float) -> void:
-	playerCount.text = "Active player/s: %s" % [gameData.renderPlayerCount()]
-	diamond_count_label.text = str(PlayerGlobalScript.player_diamond)
+	if prev_IGN != PlayerGlobalScript.player_in_game_name:
+		prev_IGN = PlayerGlobalScript.player_in_game_name
+		player_in_game_name_label.text = PlayerGlobalScript.player_in_game_name
 	
-	coordinate_label.text = "Player posX: " + str("%.2f" % PlayerGlobalScript.player_pos_X) + "\nPlayer posY: " + str("%.2f" % PlayerGlobalScript.player_pos_Y)
+	var count = gameData.renderPlayerCount()
+	if prev_count != count:
+		prev_count = count
+		playerCount.text = "Active player/s: %s" % [count]
+		
+	if prev_diamond != PlayerGlobalScript.player_diamond:
+		prev_diamond = PlayerGlobalScript.player_diamond
+		diamond_count_label.text = str(PlayerGlobalScript.player_diamond)
+	
+	if prev_coordinates != Vector2(PlayerGlobalScript.player_pos_X, PlayerGlobalScript.player_pos_Y):
+		prev_coordinates = Vector2(PlayerGlobalScript.player_pos_X, PlayerGlobalScript.player_pos_Y)
+		coordinate_label.text = "Player posX: " + str("%.2f" % PlayerGlobalScript.player_pos_X) + "\nPlayer posY: " + str("%.2f" % PlayerGlobalScript.player_pos_Y)
 	
 	message_render_display()
 	
@@ -178,6 +204,7 @@ func _on_http_request_request_completed(_result: int, response_code: int, _heade
 		if err == OK:
 			var texture = ImageTexture.create_from_image(image)
 			player_profile.texture = texture
+			player_profile_view.texture = texture
 		else:
 			print("Failed to load image from buffer:", err)
 	else:

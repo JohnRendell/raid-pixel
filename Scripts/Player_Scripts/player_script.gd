@@ -9,6 +9,7 @@ extends PlayerMovement
 var player_max_health = 100
 
 var prev_state = {}
+var prev_coordinates = Vector2.ZERO
 
 func _ready() -> void:
 	player_health_bar.value = 100
@@ -17,11 +18,11 @@ func _ready() -> void:
 		
 func play_punch_animation():
 	if isRight or isLeft:
-		player_anim.play("side_punch_anim")
+		play_anim("side_punch_anim")
 	elif isUp:
-		player_anim.play("back_punch_anim")
+		play_anim("back_punch_anim")
 	elif isDown:
-		player_anim.play("front_punch_anima")
+		play_anim("front_punch_anima")
 	
 func _process(_delta: float) -> void:
 	player_ign.text = PlayerGlobalScript.player_in_game_name
@@ -31,30 +32,37 @@ func _process(_delta: float) -> void:
 	if not isAttacking:
 		if isLeft or isRight:
 			if value.x <= -1 or value.x >= 1:
-				player_anim.play("side_walk_anim")
+				play_anim("side_walk_anim")
 			else:
-				player_anim.play("side_idle_anim")
+				play_anim("side_idle_anim")
 			player_sprite.flip_h = true if isLeft else false
 		
 		elif isUp:
 			if value.y <= -1:
-				player_anim.play("back_walk_anim")
+				play_anim("back_walk_anim")
 			else:
-				player_anim.play("back_idle_anim")
+				play_anim("back_idle_anim")
 		
 		elif isDown:
 			if value.y >= 1:
-				player_anim.play("front_walk_anim")
+				play_anim("front_walk_anim")
 			else:
-				player_anim.play("front_idle_anim")
+				play_anim("front_idle_anim")
 	else:
 		play_punch_animation()
 	
 	player_sprite.visible = PlayerGlobalScript.main_player_spawned
-	PlayerGlobalScript.player_pos_X = $".".position.x
-	PlayerGlobalScript.player_pos_Y = $".".position.y
+	
+	if prev_coordinates != Vector2($".".position.x, $".".position.y):
+		prev_coordinates = Vector2($".".position.x, $".".position.y)
+		PlayerGlobalScript.player_pos_X = $".".position.x
+		PlayerGlobalScript.player_pos_Y = $".".position.y
 	
 	send_player_data()
+	
+func play_anim(anim_name):
+	if player_anim.current_animation != anim_name:
+		player_anim.play(anim_name)
 	
 func send_player_data():
 	var current_state = {

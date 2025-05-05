@@ -100,7 +100,8 @@ route.post("/createAccount", async (req, res) =>{
         }
         else{
             await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(sanitize(req.body.password)), account_type: "Player", login_token: uuidv4() });
-            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png" })
+           
+            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
             status = "Success";
         }
         res.status(200).json({ status: status })
@@ -125,7 +126,7 @@ route.post("/createGuestAccount", async (req, res)=>{
 
         const createAcc = await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(generatePassword()), account_type: "Guest", login_token: uuidv4() });
         
-        const playerInfo = await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png" })
+        const playerInfo = await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
         
         let status = "failed";
         let diamond = 0;
