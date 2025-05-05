@@ -4,10 +4,10 @@ extends Node
 var prev_data: Dictionary
 var getPlayerCount = "Fetching..."
 
-func player_logout():
+func player_logout(gameID: String):
 	SocketClient.send_data({
 		"Socket_Name": "Player_Logout",
-		"GameID": PlayerGlobalScript.player_game_id
+		"GameID": gameID
 	})
 		
 func renderPlayerCount():

@@ -47,6 +47,13 @@ module.exports = (server, WebSocketServer)=>{
                         }
                     )
                 }
+
+                ws.send(JSON.stringify(
+                    {
+                        "Socket_Name": socket_name,
+                        "Player_GameID": parsed_message.Player_GameID
+                    }
+                ));
             }
 
             //for player logout

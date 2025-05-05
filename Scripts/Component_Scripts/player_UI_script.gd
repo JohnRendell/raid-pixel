@@ -26,14 +26,21 @@ extends Global_Message
 @onready var guest_warning_text = $"Guest Connect Account Panel/Panel/Warning text"
 
 #for player profile contents
-@onready var player_in_game_name_label = $"Profile Modal/label"
+@onready var player_in_game_name_label = $"Profile Modal/In Game Name Label"
+@onready var player_gameID_label = $"Profile Modal/Game ID Label"
 @onready var player_profile_view = $"Profile Modal/Profile View"
+@onready var player_description_label = $"Profile Modal/Description Label"
 
 #for passing data
 var prev_count = ""
 var prev_IGN = ""
+var prev_gameID = ""
+var prev_description = ""
 var prev_diamond = 0
 var prev_coordinates = Vector2.ZERO
+
+#for profile
+var description_profile = ""
 
 func _ready() -> void:
 	logout_btn.connect("pressed", going_log_out)
@@ -56,9 +63,20 @@ func _ready() -> void:
 	guest_back_button.connect("pressed", func(): status_panel(false, guest_connect_account_panel))
 	guest_confirm_button.connect("pressed", upgrade_account)
 	
-	#load profile image
-	var url = PlayerGlobalScript.player_profile
-	http_request.request(url)
+	get_player_data()
+	
+func get_player_data():
+	var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "playerInformation/playerData", { "username": PlayerGlobalScript.player_username })
+	
+	if result["status"] == "Success":
+		PlayerGlobalScript.player_profile = result["profile"]
+		PlayerGlobalScript.player_diamond = result["diamond"]
+		PlayerGlobalScript.player_in_game_name = result["inGameName"]
+		description_profile = result["description"]
+	
+		#load profile image
+		var url = PlayerGlobalScript.player_profile
+		http_request.request(url)
 	
 func status_panel(status: bool, panel: Panel):
 	panel.visible = status
@@ -109,7 +127,15 @@ func upgrade_account():
 func _process(_delta: float) -> void:
 	if prev_IGN != PlayerGlobalScript.player_in_game_name:
 		prev_IGN = PlayerGlobalScript.player_in_game_name
-		player_in_game_name_label.text = PlayerGlobalScript.player_in_game_name
+		player_in_game_name_label.text = prev_IGN
+		
+	if prev_gameID != PlayerGlobalScript.player_game_id:
+		prev_gameID = PlayerGlobalScript.player_game_id
+		player_gameID_label.text = prev_gameID
+		
+	if prev_description != description_profile:
+		prev_description = description_profile
+		player_description_label.text = prev_description
 	
 	var count = gameData.renderPlayerCount()
 	if prev_count != count:
@@ -161,14 +187,13 @@ func going_log_out():
 		
 	PlayerGlobalScript.isLoggedOut = true
 	validation_modal.visible = true
-	gameData.player_logout()
+	gameData.player_logout(prev_gameID)
 	
 	if PlayerGlobalScript.player_account_type == "Guest":
 		await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/deleteAccountGuest", { "username": PlayerGlobalScript.player_username, "login_token": PlayerGlobalScript.player_UUID })
 	
 	await get_tree().create_timer(1.0).timeout
 
-	SocketClient.isConnected = false
 	WebsocketsConnection.socket_connection_status = ""
 	WebsocketsConnection.socket_data = {}
 	

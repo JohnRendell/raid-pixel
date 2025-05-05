@@ -9,30 +9,23 @@ const { v4: uuidv4 } = require('uuid');
 route.post("/validateAccount", async (req, res)=>{
     try{
         const findAcc = await accountModel.findOne({ username: sanitize(req.body.username) })
-        const findPlayerInfo = await playerInfoModel.findOne({ username: sanitize(req.body.username) })
 
         let status = "Not Found";
-        let inGameName = "Not Set";
-        let diamond = 0;
         let username = "Not found";
         let login_token = "Not found";
         let player_account_type = "Not found";
-        let player_profile = "Not found";
 
-        if(findAcc && findPlayerInfo){
+        if(findAcc){
             let passwordCorrect = await bcrypt.compare(sanitize(req.body.password), findAcc.password)
 
             if(passwordCorrect){
                 status = "Account found"
-                inGameName = findPlayerInfo.inGameName;
-                diamond = findPlayerInfo.diamond;
-                username = findPlayerInfo.username;
+                username = findAcc.username;
                 login_token = findAcc.login_token;
                 player_account_type = findAcc.account_type;
-                player_profile = findPlayerInfo.profile
             }
         }
-        res.status(200).json({ status: status, inGameName: inGameName, playerDiamond: diamond, username: username, login_token: login_token, player_type: player_account_type, player_profile: player_profile });
+        res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type });
     }
     catch(err){
         console.log(err);
@@ -126,26 +119,20 @@ route.post("/createGuestAccount", async (req, res)=>{
 
         const createAcc = await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(generatePassword()), account_type: "Guest", login_token: uuidv4() });
         
-        const playerInfo = await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
-        
         let status = "failed";
-        let diamond = 0;
         let username = "Not Found";
-        let gameUser = "Not Found";
         let login_token = "Not Found";
         let player_account_type = "Not Found";
-        let player_profile = "Not Found";
 
-        if(createAcc && playerInfo){
+        if(createAcc){
             status = "Success";
-            username = playerInfo.username;
-            gameUser = playerInfo.inGameName;
-            diamond = playerInfo.diamond;
+            username = createAcc.username;
             login_token = createAcc.login_token;
             player_account_type = createAcc.account_type;
-            player_profile = playerInfo.profile
+
+            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
         }
-        res.status(200).json({ status: status, username: username, diamond: diamond, inGameName: gameUser, login_token: login_token, player_type: player_account_type, player_profile: player_profile })
+        res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type })
     }
     catch(err){
         console.log(err);
@@ -159,23 +146,16 @@ route.post("/auth_auto_login", async (req, res)=>{
         let status = "Failed";
 
         let username = "Not found";
-        let diamond = 0;
-        let gameName = "Not Found";
         let player_account_type = "Not Found";
         let UUID = "Not Found";
-        let player_profile = "No Found";
 
         const findUser = await accountModel.findOne({ username: req.body.username, login_token: login_token });
-        const findPlayerInfo = await playerInfoModel.findOne({ username: req.body.username })
 
-        if(findUser && findPlayerInfo){
+        if(findUser){
             status = "Success";
             username = findUser.username;
-            diamond = findPlayerInfo.diamond;
-            gameName = findPlayerInfo.inGameName;
             player_account_type = findUser.account_type;
             UUID = findUser.login_token;
-            player_profile = findPlayerInfo.profile
         }
         else{
             const findUser = await accountModel.findOne({ username: req.body.username });
@@ -188,7 +168,7 @@ route.post("/auth_auto_login", async (req, res)=>{
             }
         }
 
-        res.status(200).json({ status: status, username: username, playerDiamond: diamond, inGameName: gameName, player_type: player_account_type, UUID: UUID, player_profile: player_profile })
+        res.status(200).json({ status: status, username: username, player_type: player_account_type, UUID: UUID })
     }
     catch(err){
         console.log(err);

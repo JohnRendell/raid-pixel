@@ -56,8 +56,8 @@ func message_render_display():
 			var display_msg = message_clone.duplicate()
 			display_message_panel.add_child(display_msg)
 		
-		#for player connected
-		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Connected":
+		#for player connected and disconnected
+		elif data.get("Socket_Name") and prev_data != data and (data.get("Socket_Name") == "Player_Connected" or data.get("Socket_Name") == "Player_Disconnect"):
 			prev_data = data
 			
 			#remove old messages
@@ -69,24 +69,7 @@ func message_render_display():
 			if data.has("Player_GameID"):
 				var display_msg = message_label.duplicate()
 				display_msg.visible = true
-				display_msg.add_theme_color_override("default_color", Color("#005400"))
-				display_msg.text = data.get("Player_GameID") + " connected"
-				display_message_panel.add_child(display_msg)
-			
-		#player disconnected
-		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Disconnect":
-			prev_data = data
-			
-			#remove old messages
-			if display_message_panel.get_child_count() >= 5:
-				var oldest = display_message_panel.get_child(0)
-				oldest.queue_free()
-			
-			#add a new one
-			if data.has("Player_GameID"):
-				var display_msg = message_label.duplicate()
-				display_msg.visible = true
-				display_msg.add_theme_color_override("default_color", Color("#ff0000"))
-
-				display_msg.text = data.get("Player_GameID") + " disconnected"
+				
+				display_msg.text = "%s %s" % [data.get("Player_GameID"), "connected" if data.get("Socket_Name") == "Player_Connected" else "disconnected"]
+				display_msg.add_theme_color_override("default_color", Color("#ffff00") if data.get("Socket_Name") == "Player_Connected" else Color("#ff0000"))
 				display_message_panel.add_child(display_msg)

@@ -2,26 +2,19 @@ extends Node
 
 var socket = WebsocketsConnection.socket
 var socket_data = WebsocketsConnection.socket_data
-var isConnected = false
+
+var connection_status = ""
 
 func _process(_delta: float) -> void:
-	if PlayerGlobalScript.player_game_id and WebsocketsConnection.socket_connection_status == "Connected" and not isConnected:
+	if PlayerGlobalScript.player_game_id and connection_status !=  WebsocketsConnection.socket_connection_status:
 		send_data(
 			{
-				"Socket_Name": "Player_Connected",
+				"Socket_Name": "Player_Connected" if WebsocketsConnection.socket_connection_status == "Connected" else "Player_Disonnected",
 				"Player_GameID": PlayerGlobalScript.player_game_id
 			}
 		)
-		isConnected = true
 		
-	elif WebsocketsConnection.socket_connection_status == "Disconnected":
-		send_data(
-			{
-				"Socket_Name": "Player_Disonnected",
-				"Player_GameID": PlayerGlobalScript.player_game_id
-			}
-		)
-		isConnected = false
+		connection_status = WebsocketsConnection.socket_connection_status
 
 func send_data(data):
 	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:

@@ -9,6 +9,7 @@ extends PlayerMovement
 var player_max_health = 100
 
 var prev_state = {}
+var prev_ign = ""
 var prev_coordinates = Vector2.ZERO
 
 func _ready() -> void:
@@ -25,7 +26,10 @@ func play_punch_animation():
 		play_anim("front_punch_anima")
 	
 func _process(_delta: float) -> void:
-	player_ign.text = PlayerGlobalScript.player_in_game_name
+	if prev_ign != PlayerGlobalScript.player_in_game_name:
+		prev_ign = PlayerGlobalScript.player_in_game_name
+		player_ign.text = PlayerGlobalScript.player_in_game_name
+		
 	var value = direction_value
 	isAttacking = Input.is_action_pressed("punch") and PlayerGlobalScript.isModalOpen == false
 	

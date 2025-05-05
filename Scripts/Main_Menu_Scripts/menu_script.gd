@@ -28,7 +28,7 @@ func _ready() -> void:
 	guest_proceed_btn.connect("pressed", login_as_guest)
 	login_proceed_btn.connect("pressed", proceed_login)
 	
-	auto_login()
+	#auto_login()
 	
 func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
@@ -45,8 +45,7 @@ func login_as_guest():
 		PlayerGlobalScript.player_UUID = createGuestAccount["login_token"]
 		PlayerGlobalScript.player_account_type = createGuestAccount["player_type"]
 		PlayerGlobalScript.player_username = createGuestAccount["username"]
-		PlayerGlobalScript.player_diamond = createGuestAccount["diamond"]
-		PlayerGlobalScript.player_in_game_name = createGuestAccount["inGameName"]
+
 		PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
 		
 		save_username_local(createGuestAccount["username"], createGuestAccount["login_token"])
@@ -94,13 +93,10 @@ func proceed_login():
 		
 		if account_validate_result["status"] == "Account found":
 			loading_modal.visible = true
-			PlayerGlobalScript.player_profile = account_validate_result["player_profile"]
-			PlayerGlobalScript.player_UUID = account_validate_result["login_token"]
 			PlayerGlobalScript.player_account_type = account_validate_result["player_type"]
+			PlayerGlobalScript.player_UUID = account_validate_result["login_token"]
 			PlayerGlobalScript.player_username = account_validate_result["username"]
-			PlayerGlobalScript.player_diamond = account_validate_result["playerDiamond"]
-			
-			PlayerGlobalScript.player_in_game_name = account_validate_result["inGameName"]
+	
 			PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
 			PlayerGlobalScript.isModalOpen = false
 			PlayerGlobalScript.current_modal_open = false
@@ -131,13 +127,10 @@ func auto_login():
 				var account_validate_result = await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/auth_auto_login", { "username": parsed["player_username"], "login_token": parsed["login_token"] })
 		
 				if account_validate_result["status"] == "Success":
-					PlayerGlobalScript.player_profile = account_validate_result["player_profile"]
 					PlayerGlobalScript.player_UUID = account_validate_result["UUID"]
 					PlayerGlobalScript.player_account_type = account_validate_result["player_type"]
 					PlayerGlobalScript.player_username = account_validate_result["username"]
-					PlayerGlobalScript.player_diamond = account_validate_result["playerDiamond"]
 					
-					PlayerGlobalScript.player_in_game_name = account_validate_result["inGameName"]
 					PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
 				
 					PlayerGlobalScript.isModalOpen = false
