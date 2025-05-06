@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3fy2yoewjeff"]
+[gd_scene load_steps=9 format=3 uid="uid://d3fy2yoewjeff"]
 
 [ext_resource type="Texture2D" uid="uid://bepc07ch8vofu" path="res://Assets/Sprite_Animations/Spawner.png" id="1_27kyy"]
 [ext_resource type="Script" uid="uid://dynacbdoxryv" path="res://Scripts/Player_Scripts/player_spawn.gd" id="1_41euf"]
+[ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="3_o2rrh"]
 
 [sub_resource type="Animation" id="Animation_41euf"]
 length = 0.001
@@ -65,7 +66,17 @@ size = Vector2(84, 16)
 z_index = 1
 script = ExtResource("1_41euf")
 
+[node name="Obj Shadow" type="TextureRect" parent="."]
+self_modulate = Color(0.0923971, 0.0923971, 0.092397, 1)
+offset_left = -52.0
+offset_top = -18.0
+offset_right = 51.0
+offset_bottom = 11.0
+texture = ExtResource("3_o2rrh")
+expand_mode = 1
+
 [node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 1
 texture = ExtResource("1_27kyy")
 offset = Vector2(0, -40)
 hframes = 8

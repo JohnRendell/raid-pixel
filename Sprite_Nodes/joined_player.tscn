@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://d21kxxttmlvfc"]
+[gd_scene load_steps=19 format=3 uid="uid://d21kxxttmlvfc"]
 
 [ext_resource type="Script" uid="uid://h2r2qor8irl2" path="res://Scripts/Player_Scripts/joined_player_script.gd" id="1_5tsll"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="2_6sl8t"]
 [ext_resource type="Texture2D" uid="uid://cqxd7vwq076re" path="res://Assets/Sprite_Animations/Default_Character.png" id="3_7pmfe"]
+[ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="4_6sl8t"]
 
 [sub_resource type="Animation" id="Animation_0vxpe"]
 length = 0.001
@@ -191,6 +192,15 @@ load_path = "res://.godot/imported/Sprite_Health_Main_player.png-23e39427be1d8b4
 z_index = 1
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_5tsll")
+
+[node name="Obj Shadow" type="TextureRect" parent="."]
+self_modulate = Color(0.0923971, 0.0923971, 0.092397, 1)
+offset_left = -23.75
+offset_top = -2.5
+offset_right = 24.25
+offset_bottom = 20.5
+texture = ExtResource("4_6sl8t")
+expand_mode = 1
 
 [node name="Player ign" type="RichTextLabel" parent="."]
 custom_minimum_size = Vector2(150, 0)

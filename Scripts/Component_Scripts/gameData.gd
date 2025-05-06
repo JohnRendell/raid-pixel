@@ -3,6 +3,19 @@ extends Node
 
 var prev_data: Dictionary
 var getPlayerCount = "Fetching..."
+var time_scene = 0
+
+#for getting time in scene
+func get_scene_time(scene_name):
+	var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
+	
+	if result and result["status"] == "Success":
+		if result["scene_name"] == scene_name:
+			return result["time"]
+		else:
+			return 0
+	else:
+		return 0
 
 func player_logout(gameID: String):
 	SocketClient.send_data({

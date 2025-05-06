@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://c3orji6prrgwp"]
+[gd_scene load_steps=19 format=3 uid="uid://c3orji6prrgwp"]
 
 [ext_resource type="Texture2D" uid="uid://cqxd7vwq076re" path="res://Assets/Sprite_Animations/Default_Character.png" id="1_0obo4"]
 [ext_resource type="Script" uid="uid://edsrc6d0vo01" path="res://Scripts/Player_Scripts/player_script.gd" id="1_0vxpe"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="2_2bxlq"]
 [ext_resource type="Texture2D" uid="uid://da4onytp74er2" path="res://Assets/UI_Components/Sprite_Health_Empty.png" id="4_n0hth"]
 [ext_resource type="Texture2D" uid="uid://447p056hb11g" path="res://Assets/UI_Components/Sprite_Health_Main_player.png" id="5_m7d5h"]
+[ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="6_m7d5h"]
 
 [sub_resource type="Animation" id="Animation_0vxpe"]
 length = 0.001
@@ -187,6 +188,15 @@ size = Vector2(32.5, 12.5)
 z_index = 1
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_0vxpe")
+
+[node name="Obj Shadow" type="TextureRect" parent="."]
+self_modulate = Color(0.0923971, 0.0923971, 0.092397, 1)
+offset_left = -23.75
+offset_top = -2.5
+offset_right = 24.25
+offset_bottom = 20.5
+texture = ExtResource("6_m7d5h")
+expand_mode = 1
 
 [node name="Player ign" type="RichTextLabel" parent="."]
 custom_minimum_size = Vector2(150, 0)

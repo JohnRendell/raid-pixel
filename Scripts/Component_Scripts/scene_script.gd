@@ -6,6 +6,18 @@ extends Node
 @onready var default_tree = preload("res://Sprite_Nodes/default_tree.tscn")
 @export var ySort: Control
 @export var tileMap: TileMapLayer
+@export var scene_name: String
+
+#for day and night cycle stuff
+@export var canvasModulate: CanvasModulate
+@export var night_color: Color
+@export var day_color: Color
+@export var time_max: float
+var time = 0
+
+#for time to render
+@export var time_render: RichTextLabel
+var prev_time = 0
 
 var max_scene_width_left: float
 var max_scene_width_right: float
@@ -15,6 +27,9 @@ var max_scene_height_bottom: float
 var world_rect: Rect2
 
 @export var scene_player_type = "type of player on a scene"
+
+#for game data
+var gd = GameData.new()
 
 func _ready() -> void:
 	PlayerGlobalScript.player_type = scene_player_type
@@ -38,10 +53,29 @@ func _ready() -> void:
 	
 	#trees
 	scatter_obj(default_tree, [Vector2(2131, -121), Vector2(1587, 1334), Vector2(224, -1620), Vector2(4473, -1302), Vector2(4026, 158)])
+	
+	var result = await gd.get_scene_time(scene_name)
+	
+	if result:
+		time = result
 
-func _process(_delta: float):
+func day_night_cycle(delta):
+	time += delta
+	time = fmod(time, time_max)
+
+	var normalized_time = (sin((PI * time / time_max)) + 1.0) / 2.0
+	canvasModulate.color = night_color.lerp(day_color, normalized_time)
+	
+	if prev_time != time:
+		prev_time = time
+		time_render.text = "Time: %.2f" % [prev_time]
+		
+		ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/day_night_cycle", { "scene_name": scene_name, "time": time })
+	
+func _process(delta: float):
 	wrap_around()
 	adjust_player_camera_limit()
+	day_night_cycle(delta)
 	
 func adjust_player_camera_limit():
 	var playerCamera = main_player.player_camera

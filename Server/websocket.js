@@ -12,6 +12,8 @@ module.exports = (server, WebSocketServer)=>{
             let parsed_message = JSON.parse(message);
             let socket_name = parsed_message.Socket_Name;
             
+            console.log(parsed_message)
+
             //Global Messages
             if(socket_name == "GlobalMessage"){
                 broadcastSocket(
