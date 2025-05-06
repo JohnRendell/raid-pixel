@@ -12,7 +12,7 @@ extends Node
 @export var canvasModulate: CanvasModulate
 @export var night_color: Color
 @export var day_color: Color
-@export var time_max: float
+var time_max = 0
 var time = 0
 
 #for time to render
@@ -27,9 +27,6 @@ var max_scene_height_bottom: float
 var world_rect: Rect2
 
 @export var scene_player_type = "type of player on a scene"
-
-#for game data
-var gd = GameData.new()
 
 func _ready() -> void:
 	PlayerGlobalScript.player_type = scene_player_type
@@ -54,10 +51,15 @@ func _ready() -> void:
 	#trees
 	scatter_obj(default_tree, [Vector2(2131, -121), Vector2(1587, 1334), Vector2(224, -1620), Vector2(4473, -1302), Vector2(4026, 158)])
 	
-	var result = await gd.get_scene_time(scene_name)
+	await get_tree().create_timer(1.0).timeout
+	var get_time = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
 	
-	if result:
-		time = result
+	if get_time["status"] == "Success":
+		time = get_time["time"]
+		time_max = get_time["time_max"]
+	else:
+		time = 0
+		time_max = 0
 
 func day_night_cycle(delta):
 	time += delta
@@ -66,11 +68,9 @@ func day_night_cycle(delta):
 	var normalized_time = (sin((PI * time / time_max)) + 1.0) / 2.0
 	canvasModulate.color = night_color.lerp(day_color, normalized_time)
 	
-	if prev_time != time:
+	if time != prev_time:
+		time_render.text = "Time: %.2f" % [time]
 		prev_time = time
-		time_render.text = "Time: %.2f" % [prev_time]
-		
-		ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/day_night_cycle", { "scene_name": scene_name, "time": time })
 	
 func _process(delta: float):
 	wrap_around()

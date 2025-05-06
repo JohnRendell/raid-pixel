@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 
 const sceneSchema = new Schema({
     scene_name: { type: String, require: true },
-    time: { type: Number, require: true }
+    time: { type: Number, require: true },
+    time_max: { type: Number, require: true }
 });
 
 const sceneModel = mongoose.model("scene", sceneSchema);

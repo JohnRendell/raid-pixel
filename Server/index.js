@@ -54,9 +54,15 @@ require("./websocket")(expressServer, WebSocketServer)
 
 //listen to port
 const PORT = process.env.PORT;
-expressServer.listen(PORT, ()=>{
-    reset_playerCount(require("./gameDataMongooseSchema"))
+expressServer.listen(PORT, async ()=>{
     console.log('Listening to port ' + PORT);
+    reset_playerCount(require("./gameDataMongooseSchema"))
+
+    //for scene manager
+    const sceneManager = require("./sceneManagerServer")
+    await sceneManager.initializeScene();
+
+    sceneManager.startCycle();
 });
 
 async function reset_playerCount(gameDataModel){
