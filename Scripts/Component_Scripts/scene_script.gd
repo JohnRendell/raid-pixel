@@ -14,6 +14,7 @@ extends Node
 @export var day_color: Color
 var time_max = 0
 var time = 0
+var isTimeLoaded = false
 
 #for time to render
 @export var time_render: RichTextLabel
@@ -54,12 +55,16 @@ func _ready() -> void:
 	await get_tree().create_timer(1.0).timeout
 	var get_time = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
 	
-	if get_time["status"] == "Success":
+	time_render.text = "Fetching time..."
+	
+	if get_time.has("status") and get_time["status"] == "Success":
 		time = get_time["time"]
 		time_max = get_time["time_max"]
+		isTimeLoaded = true
 	else:
 		time = 0
 		time_max = 0
+		isTimeLoaded = true
 
 func day_night_cycle(delta):
 	time += delta
@@ -68,7 +73,7 @@ func day_night_cycle(delta):
 	var normalized_time = (sin((PI * time / time_max)) + 1.0) / 2.0
 	canvasModulate.color = night_color.lerp(day_color, normalized_time)
 	
-	if time != prev_time:
+	if time != prev_time and isTimeLoaded:
 		time_render.text = "Time: %.2f" % [time]
 		prev_time = time
 	

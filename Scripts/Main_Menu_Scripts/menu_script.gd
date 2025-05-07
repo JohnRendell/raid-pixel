@@ -28,7 +28,7 @@ func _ready() -> void:
 	guest_proceed_btn.connect("pressed", login_as_guest)
 	login_proceed_btn.connect("pressed", proceed_login)
 	
-	#auto_login()
+	auto_login()
 	
 func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
@@ -47,9 +47,6 @@ func login_as_guest():
 		PlayerGlobalScript.player_username = createGuestAccount["username"]
 
 		PlayerGlobalScript.player_game_id = "GameID_%s" % [string_generator()]
-		
-		save_username_local(createGuestAccount["username"], createGuestAccount["login_token"])
-		
 		PlayerGlobalScript.isModalOpen = false
 		PlayerGlobalScript.current_modal_open = false
 		

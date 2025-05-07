@@ -1,0 +1,28 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://c77cknt0mqlc1"]
+
+[ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="1_ja3s2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ja3s2"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.745098, 0.745098, 0.745098, 0.313726)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[resource]
+TextEdit/colors/caret_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_placeholder_color = Color(0, 0, 0, 0.733333)
+TextEdit/constants/caret_width = 4
+TextEdit/font_sizes/font_size = 20
+TextEdit/fonts/font = ExtResource("1_ja3s2")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_ja3s2")

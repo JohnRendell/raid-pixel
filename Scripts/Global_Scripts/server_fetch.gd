@@ -30,7 +30,6 @@ func send_post_request(route: String, data: Dictionary) -> Dictionary:
 
 	return response_json
 
-#TODO: fix this get request
 func get_request(route: String) -> Dictionary:
 	var url = route
 

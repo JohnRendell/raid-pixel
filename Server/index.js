@@ -49,8 +49,11 @@ app.use("/accountRoute", require("./accountRoutes"));
 app.use("/gameData", require("./gameDataRoute"));
 app.use("/playerInformation", require("./playerInformationRoute"));
 
-//websockets
-require("./websocket")(expressServer, WebSocketServer)
+//websocket server
+const wss = new WebSocketServer({ server: expressServer });
+
+require("./websocket_game_stuff")(wss);
+require("./websocket_player_stuff")(wss);
 
 //listen to port
 const PORT = process.env.PORT;

@@ -10,7 +10,8 @@ func _process(_delta: float) -> void:
 		send_data(
 			{
 				"Socket_Name": "Player_Connected" if WebsocketsConnection.socket_connection_status == "Connected" else "Player_Disonnected",
-				"Player_GameID": PlayerGlobalScript.player_game_id
+				"Player_GameID": PlayerGlobalScript.player_game_id,
+				"Player_username": PlayerGlobalScript.player_username,
 			}
 		)
 		

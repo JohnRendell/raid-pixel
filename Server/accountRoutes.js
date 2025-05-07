@@ -175,23 +175,4 @@ route.post("/auth_auto_login", async (req, res)=>{
     }
 });
 
-route.post("/deleteAccountGuest", async (req, res)=>{
-    try{
-        let status = "Failed";
-        let login_token = req.body.login_token;
-
-        const findUser = await accountModel.findOneAndDelete({ username: req.body.username, login_token: login_token, account_type: "Guest" });
-        const findPlayerInfo = await playerInfoModel.findOneAndDelete({ username: req.body.username })
-
-        if(findUser && findPlayerInfo){
-            status = "Success";
-        }
-
-        res.status(200).json({ status: status })
-    }
-    catch(err){
-        console.log(err);
-    }
-});
-
 module.exports = route;
