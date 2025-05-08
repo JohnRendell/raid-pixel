@@ -2,8 +2,6 @@ extends Node
 
 @export var scene_particle: CPUParticles2D
 @export var main_player: CharacterBody2D
-
-@onready var default_tree = preload("res://Sprite_Nodes/default_tree.tscn")
 @export var ySort: Control
 @export var tileMap: TileMapLayer
 @export var scene_name: String
@@ -48,9 +46,6 @@ func _ready() -> void:
 	max_scene_width_right = world_rect.position.x
 	max_scene_height_bottom = world_rect.position.y + world_rect.size.y
 	max_scene_height_top = world_rect.position.y
-	
-	#trees
-	scatter_obj(default_tree, [Vector2(2131, -121), Vector2(1587, 1334), Vector2(224, -1620), Vector2(4473, -1302), Vector2(4026, 158)])
 	
 	await get_tree().create_timer(1.0).timeout
 	var get_time = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
@@ -108,9 +103,3 @@ func wrap_around():
 	#going up
 	elif main_player.position.y <= max_scene_height_top:
 		main_player.position.y = max_scene_height_bottom
-		
-func scatter_obj(obj, obj_pos):
-	for pos in obj_pos:
-		var clone_obj = obj.instantiate()
-		clone_obj.position = Vector2(pos)
-		ySort.add_child(clone_obj)

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://crjpppc78kvxv"]
+
+[ext_resource type="Texture2D" uid="uid://3d2ibps4sk1y" path="res://Assets/Background_Images/Space_Background.png" id="1_ppkpg"]
+[ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="2_wsgkf"]
+[ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="3_74t0d"]
+
+[node name="map_scene" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -230.0
+offset_top = -46.0
+offset_right = 2152.0
+offset_bottom = 1145.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ppkpg")
+expand_mode = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Player UI" parent="CanvasLayer" instance=ExtResource("2_wsgkf")]
+
+[node name="Connection_Interface" parent="CanvasLayer" instance=ExtResource("3_74t0d")]
+visible = false
