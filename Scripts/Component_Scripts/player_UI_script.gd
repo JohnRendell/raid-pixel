@@ -10,6 +10,7 @@ extends Global_Message
 @onready var player_profile = $"Profile"
 @onready var http_request = $"HTTPRequest"
 @onready var off_world_button = $"Off World button"
+@onready var current_player_scene_button = $"Show Players"
 
 #for guest stuff
 @onready var guestAccountButton = $"Guest Account connect button"
@@ -81,14 +82,8 @@ func _ready() -> void:
 	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
-	
-	#for button
-	var current_scene = PlayerGlobalScript.current_scene
-	off_world_button.text = "Go to Lobby" if current_scene.to_upper() == "LOBBY" else "Off World"
-	off_world_button.connect("pressed", func(): going_off_world(current_scene))
-	
+		
 	var data = await player_profile_class.get_player_data(http_request)
-	
 	if data["status"] == "Finished":
 		in_game_name_input.text = data["inGameName"]
 		description_input.text = data["description"]
@@ -98,18 +93,22 @@ func _ready() -> void:
 		var count = await game_data_class.get_player_count()
 		playerCount.text = "Active player/s: %s" % [count]
 		
-func going_off_world(current_scene: String):
-	var map_scene = "res://Scenes/map_scene.tscn"
-	var lobby_scene = "res://Scenes/lobby_scene.tscn"
-	var scene_path: String
+	#for button and other stuff
+	var current_scene = PlayerGlobalScript.current_scene
+	off_world_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
+	off_world_button.connect("pressed", going_off_world)
 	
-	if current_scene.to_upper() == "LOBBY":
-		scene_path = lobby_scene
-	else:
-		scene_path = map_scene
+	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
+	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 		
+func going_off_world():
+	SocketClient.send_data({
+		"Socket_Name": "going_offWorld",
+		"Player_GameID": PlayerGlobalScript.player_game_id
+	})
+	
 	loading_modal.visible = true
-	loading_modal.load(scene_path)
+	loading_modal.load("res://Scenes/map_scene.tscn")
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)

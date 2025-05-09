@@ -5,14 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="2_wsgkf"]
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="3_74t0d"]
 [ext_resource type="Texture2D" uid="uid://ytdahw2kkbcn" path="res://Assets/Sprite_Static/Planets/lobby_planet.png" id="4_lkmvg"]
-[ext_resource type="Shader" uid="uid://dhwsn1yqhm5rh" path="res://Assets/Shader/highlight.gdshader" id="4_nf5oo"]
 [ext_resource type="Texture2D" uid="uid://bxn1t08f5se5g" path="res://Assets/Sprite_Static/Planets/Star.png" id="4_nylon"]
 [ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="5_tqesh"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2nhsl"]
-shader = ExtResource("4_nf5oo")
-shader_parameter/line_color = Color(1, 1, 0, 1)
-shader_parameter/line_thickness = 5.0
+[ext_resource type="PackedScene" uid="uid://bs0rmjac2s33w" path="res://Interface_Scenes/planet_scene.tscn" id="8_d3vki"]
+[ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_lig3r"]
 
 [node name="map_scene" type="Node2D"]
 script = ExtResource("1_d3vki")
@@ -31,24 +27,12 @@ texture = ExtResource("1_ppkpg")
 expand_mode = 1
 
 [node name="Star" type="Sprite2D" parent="."]
-position = Vector2(213, 310)
+position = Vector2(-8, 917)
 texture = ExtResource("4_nylon")
 
 [node name="PointLight2D" type="PointLight2D" parent="Star"]
 energy = 16.0
 texture = ExtResource("5_tqesh")
-
-[node name="Lobby Planet" type="TextureRect" parent="."]
-texture_filter = 1
-material = SubResource("ShaderMaterial_2nhsl")
-offset_left = 662.0
-offset_top = 751.0
-offset_right = 662.0
-offset_bottom = 751.0
-scale = Vector2(0.6575, 0.6575)
-mouse_force_pass_scroll_events = false
-mouse_default_cursor_shape = 2
-texture = ExtResource("4_lkmvg")
 
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 2
@@ -59,8 +43,22 @@ offset_top = -5.0
 offset_right = 2.0
 offset_bottom = -5.0
 
+[node name="planet_scene" parent="UI" node_paths=PackedStringArray("loading_modal") instance=ExtResource("8_d3vki")]
+offset_left = 769.0
+offset_top = 762.0
+offset_right = 1169.0
+offset_bottom = 1162.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 1
+texture_normal = ExtResource("4_lkmvg")
+loading_modal = NodePath("../Loading Interface")
+scene_path = "res://Scenes/lobby_scene.tscn"
+tool_tip = "Go to lobby"
+title = "Lobby"
+description = "Lobby for all player's globally."
+
 [node name="Connection_Interface" parent="UI" instance=ExtResource("3_74t0d")]
 visible = false
 
-[connection signal="mouse_entered" from="Lobby Planet" to="Lobby Planet" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Lobby Planet" to="Lobby Planet" method="_on_mouse_exited"]
+[node name="Loading Interface" parent="UI" instance=ExtResource("10_lig3r")]
+visible = false

@@ -29,6 +29,7 @@ var world_rect: Rect2
 
 func _ready() -> void:
 	PlayerGlobalScript.player_type = scene_player_type
+	PlayerGlobalScript.current_scene = scene_name
 	
 	if scene_particle:
 		scene_particle.emitting = true
@@ -60,9 +61,6 @@ func _ready() -> void:
 		time = 0
 		time_max = 0
 		isTimeLoaded = true
-		
-	#set up the name of scene to player current scene
-	PlayerGlobalScript.current_scene = scene_name
 
 func day_night_cycle(delta):
 	time += delta

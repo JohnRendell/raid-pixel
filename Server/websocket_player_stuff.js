@@ -41,6 +41,17 @@ module.exports = (wss)=>{
                     }
                 )
             }
+
+            //for playing going to off world
+            else if(socket_name === "going_offWorld"){
+                broadcastSocket(
+                    wss,
+                    {
+                        Socket_Name: socket_name,
+                        Player_GameID: parsed_message.Player_GameID
+                    }
+                )
+            }
         });
 
         ws.on('error', (err) => {
