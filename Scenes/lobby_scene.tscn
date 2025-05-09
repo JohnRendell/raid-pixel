@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://dn723fb516qkt"]
+[gd_scene load_steps=12 format=4 uid="uid://dn723fb516qkt"]
 
 [ext_resource type="Script" uid="uid://cw2r6de5l2y5o" path="res://Scripts/Component_Scripts/scene_script.gd" id="1_3q4fp"]
 [ext_resource type="Texture2D" uid="uid://dyo4boekykil" path="res://Assets/Tile_Maps/Grass_Terrain.png" id="2_ljcoi"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://eqlhfnfo2dgy" path="res://Sprite_Nodes/default_tree.tscn" id="5_nr3av"]
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="7_lvc8g"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="8_r1is2"]
-[ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="8_u8ul4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_op75h"]
 texture = ExtResource("2_ljcoi")
@@ -375,10 +374,3 @@ text = "Time: Fetching"
 fit_content = true
 scroll_active = false
 vertical_alignment = 1
-
-[node name="Sun ray" type="PointLight2D" parent="."]
-position = Vector2(-791, -2436)
-color = Color(1, 1, 1, 0.196078)
-shadow_enabled = true
-texture = ExtResource("8_u8ul4")
-texture_scale = 23.03

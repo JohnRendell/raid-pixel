@@ -17,7 +17,7 @@ func _process(_delta: float) -> void:
 	var connection_status = WebsocketsConnection.socket_connection_status
 	
 	if connection_status == "Connected":
-		if data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Spawn" and data.get("Player_inGameName") != PlayerGlobalScript.player_in_game_name:
+		if data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "Player_Spawn" and data.get("Player_GameID") != PlayerGlobalScript.player_game_id:
 			prev_data = data
 			
 			var player = joined_Player.instantiate()
@@ -55,6 +55,15 @@ func _process(_delta: float) -> void:
 				if joined_player_data:
 					joined_player.queue_free()
 					stored_players.erase(data.get("Player_GameID"))
+					
+		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "ModifyProfile":
+			prev_data = data
+			
+			if data.has("Player_GameID") and stored_players.has(data.get("Player_GameID")):
+				var joined_player_data = stored_players[data.get("Player_GameID")]
+				var joined_player = joined_player_data["Player"]
+				
+				joined_player.playerIGN = data.get("Player_inGameName")
 		
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

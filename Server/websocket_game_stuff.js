@@ -68,6 +68,18 @@ module.exports = (wss)=>{
                     )
                 }
             }
+
+            //for player modify profile
+            else if(socket_name === "ModifyProfile"){
+                broadcastSocket(
+                    wss,
+                    {
+                        "Socket_Name": socket_name,
+                        "Player_GameID": parsed_message.Player_GameID,
+                        "Player_inGameName": parsed_message.Player_inGameName
+                    }
+                )
+            }
         });
 
         ws.on('close', async () => {

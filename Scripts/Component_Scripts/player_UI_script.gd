@@ -50,7 +50,6 @@ var player_profile_class = PlayerProfile.new()
 var game_data_class = GameData.new()
 
 func _ready() -> void:
-	off_world_button.connect("pressed", going_off_world)
 	guest_connect_success_panel_btn.connect("pressed", func(): status_panel(false, guest_connect_success_panel))
 	
 	global_message_modal.visible = false
@@ -83,6 +82,11 @@ func _ready() -> void:
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
 	
+	#for button
+	var current_scene = PlayerGlobalScript.current_scene
+	off_world_button.text = "Go to Lobby" if current_scene.to_upper() == "LOBBY" else "Off World"
+	off_world_button.connect("pressed", func(): going_off_world(current_scene))
+	
 	var data = await player_profile_class.get_player_data(http_request)
 	
 	if data["status"] == "Finished":
@@ -94,9 +98,18 @@ func _ready() -> void:
 		var count = await game_data_class.get_player_count()
 		playerCount.text = "Active player/s: %s" % [count]
 		
-func going_off_world():
+func going_off_world(current_scene: String):
+	var map_scene = "res://Scenes/map_scene.tscn"
+	var lobby_scene = "res://Scenes/lobby_scene.tscn"
+	var scene_path: String
+	
+	if current_scene.to_upper() == "LOBBY":
+		scene_path = lobby_scene
+	else:
+		scene_path = map_scene
+		
 	loading_modal.visible = true
-	loading_modal.load("res://Scenes/map_scene.tscn")
+	loading_modal.load(scene_path)
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)
@@ -144,6 +157,12 @@ func save_profile_edit():
 			player_profile_class.description_profile = result["description"]
 			
 			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label)
+			
+			SocketClient.send_data({
+				"Socket_Name": "ModifyProfile",
+				"Player_GameID": PlayerGlobalScript.player_game_id,
+				"Player_inGameName": PlayerGlobalScript.player_in_game_name
+			})
 	
 func status_panel(status: bool, panel: Panel):
 	panel.visible = status
