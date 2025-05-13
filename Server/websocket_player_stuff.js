@@ -37,7 +37,8 @@ module.exports = (wss)=>{
                         "isDown": parsed_message.isDown,
                         "isUp": parsed_message.isUp,
                         "player_type": parsed_message.player_type,
-                        "isAttacking": parsed_message.isAttacking
+                        "isAttacking": parsed_message.isAttacking,
+                        "Player_username": parsed_message.Player_username
                     }
                 )
             }

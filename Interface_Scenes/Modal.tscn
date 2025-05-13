@@ -67,15 +67,15 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Modal Label" type="RichTextLabel" parent="Background Panel/Panel"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(600, 30)
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -100.0
+offset_left = -300.0
 offset_top = 17.0
-offset_right = 100.0
-offset_bottom = 57.0
+offset_right = 300.0
+offset_bottom = 54.0
 grow_horizontal = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("3_faomv")

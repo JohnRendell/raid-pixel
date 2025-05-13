@@ -71,6 +71,7 @@ func play_anim(anim_name):
 func send_player_data():
 	var current_state = {
 			"Socket_Name": "Player_Spawn",
+			"Player_username": PlayerGlobalScript.player_username,
 			"Player_inGameName": PlayerGlobalScript.player_in_game_name,
 			"Player_GameID": PlayerGlobalScript.player_game_id,
 			"Player_posX": PlayerGlobalScript.player_pos_X,

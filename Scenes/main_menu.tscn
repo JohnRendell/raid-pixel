@@ -2096,6 +2096,7 @@ libraries = {
 autoplay = "idle_btn"
 
 [node name="Connection_Interface" parent="CanvasLayer" instance=ExtResource("4_ce3w2")]
+visible = false
 
 [node name="Log in Modal" parent="CanvasLayer" node_paths=PackedStringArray("modal_open_button") instance=ExtResource("5_n45e2")]
 modal_open_button = NodePath("../UI Buttons/Play Button")
@@ -2292,10 +2293,13 @@ action_mode = 0
 text = "Log in as Guest"
 
 [node name="Validation Modal" parent="CanvasLayer" instance=ExtResource("9_trj04")]
+visible = false
 
 [node name="Loading Interface" parent="CanvasLayer" instance=ExtResource("10_16hvj")]
+visible = false
 
 [node name="Session Expired Panel" type="Panel" parent="CanvasLayer"]
+visible = false
 z_index = 20
 custom_minimum_size = Vector2(300, 50)
 anchors_preset = 5

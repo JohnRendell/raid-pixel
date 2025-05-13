@@ -24,6 +24,11 @@ func _process(_delta: float) -> void:
 			
 			if data.get("Player_inGameName"):
 				if not stored_players.has(data.get("Player_GameID")):
+					
+					GetPlayerInfo.active_player_dic[data.get("Player_username")] = {
+						"Player_GameID": data.get("Player_GameID")
+					}
+					
 					stored_players[data.get("Player_GameID")] = {
 						"Player": player,
 						"Position": Vector2(2351.0, -161.0),
@@ -55,6 +60,7 @@ func _process(_delta: float) -> void:
 				if joined_player_data:
 					joined_player.queue_free()
 					stored_players.erase(data.get("Player_GameID"))
+					GetPlayerInfo.active_player_dic.erase(data.get("Player_GameID"))
 					
 		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "ModifyProfile":
 			prev_data = data

@@ -21,6 +21,7 @@ WebsocketsConnection="*res://Scripts/Global_Scripts/websockets_connection.gd"
 ServerFetch="*res://Scripts/Global_Scripts/server_fetch.gd"
 PlayerGlobalScript="*res://Scripts/Global_Scripts/player_global_script.gd"
 SocketClient="*res://Scripts/Global_Scripts/socket_client.gd"
+GetPlayerInfo="*res://Scripts/Global_Scripts/get_player_info.gd"
 
 [display]
 
