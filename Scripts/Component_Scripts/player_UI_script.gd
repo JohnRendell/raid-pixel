@@ -31,6 +31,7 @@ extends Global_Message
 @onready var player_in_game_name_label = $"Profile Modal/In Game Name Label"
 @onready var player_gameID_label = $"Profile Modal/Game ID Label"
 @onready var player_description_label = $"Profile Modal/Description Label"
+@onready var player_profile_view = $"Profile Modal/Profile View"
 
 @onready var warning_text = $"Profile Modal/Warning Text"
 
@@ -45,11 +46,12 @@ extends Global_Message
 @onready var active_player_btn = $"Show Players button"
 @onready var player_list_container = $"Active Player Modal/Player's list container"
 @onready var player_name_list = $"Active Player Modal/Player Name"
-@onready var player_info_panel = $"Active Player Modal/Player's Info Panel"
-@onready var jplayer_name_label = $"Active Player Modal/Player's Info Panel/Player In Game Name"
-@onready var jplayer_description_label = $"Active Player Modal/Player's Info Panel/Description"
-@onready var jplayer_profile = $"Active Player Modal/Player's Info Panel/Player profile"
-@onready var jplayer_gameID = $"Active Player Modal/Player's Info Panel/Player Game ID"
+@onready var player_info_panel = $"Player's Info Panel"
+@onready var jplayer_name_label = $"Player's Info Panel/Player In Game Name"
+@onready var jplayer_description_label = $"Player's Info Panel/Description"
+@onready var jplayer_profile = $"Player's Info Panel/Player profile"
+@onready var jplayer_gameID = $"Player's Info Panel/Player Game ID"
+@onready var j_http_request = $"player_list_HTTPRequest"
 
 #for passing data
 var prev_count = ""
@@ -92,6 +94,8 @@ func _ready() -> void:
 	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
+	
+	player_info_panel.visible = false
 		
 	var data = await player_profile_class.get_player_data(http_request)
 	if data["status"] == "Finished":
@@ -115,34 +119,34 @@ func _ready() -> void:
 	
 func load_player_list():
 	var list = GetPlayerInfo.active_player_dic
-	player_info_panel.visible = player_list_container.get_child_count() > 0
+	
+	for child in player_list_container.get_children():
+		print(list)
+		print(child.name)
+		if child.name not in list.keys():
+			child.queue_free()
 	
 	for player in list:
 		if not player_list_container.has_node(player):
-			var player_gameID = player["Player_GameID"] #TODO: fix this, not able to get the game ID
+			var player_gameID = list[player]["Player_GameID"]
 			
 			var player_btn = player_name_list.duplicate()
 			player_btn.name = player
 			player_btn.text = player
 			player_btn.visible = true
-			player_btn.connect("pressed", func(): get_player_data(player, player_gameID))
+			player_btn.connect("mouse_entered", func(): get_player_data(player, player_gameID))
+			player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
 			player_list_container.add_child(player_btn)
-			
-	for child in player_list_container.get_children():
-		if child.name not in list.keys():
-			child.queue_free()
 
 func get_player_data(username, playerGameID):
-	print(username)
-	print(playerGameID)
-	"""
+	player_info_panel.visible = true
 	var result = await GetPlayerInfo.get_player_info(username)
 	
 	if result.has("status") and result["status"] == "Success":
 		jplayer_name_label.text = result["player_IGN"]
-		jplayer_description_label.text = result["description"]
+		jplayer_description_label.text = result["player_description"]
 		jplayer_gameID.text = playerGameID
-	"""
+		j_http_request.request(result["player_profile"])
 		
 func going_off_world():
 	SocketClient.send_data({
@@ -314,6 +318,7 @@ func _on_http_request_request_completed(_result: int, response_code: int, _heade
 		if err == OK:
 			var texture = ImageTexture.create_from_image(image)
 			player_profile.texture = texture
+			player_profile_view.texture = texture
 		else:
 			print("Failed to load image from buffer:", err)
 	else:
