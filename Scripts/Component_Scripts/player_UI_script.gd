@@ -3,7 +3,6 @@ extends Global_Message
 @onready var coordinate_label = $Coordinates
 @onready var global_message_modal = $"Global Messages"
 @onready var playerCount = $"Player Count"
-@onready var logout_btn = $"Setting Modal/Log out Button"
 @onready var loading_modal = $"Loading Modal"
 @onready var validation_modal = $"Validation Modal"
 @onready var diamond_count_label = $"Diamond Panel/Diamond Count"
@@ -11,6 +10,9 @@ extends Global_Message
 @onready var http_request = $"HTTPRequest"
 @onready var off_world_button = $"Off World button"
 @onready var current_player_scene_button = $"Show Players button"
+
+#setting modal contents
+@onready var logout_btn = $"Setting Modal/Panel/Log out Button"
 
 #for guest stuff
 @onready var guestAccountButton = $"Guest Account connect button"
@@ -26,21 +28,22 @@ extends Global_Message
 @onready var guest_confirm_button = $"Guest Connect Account Panel/Panel/Confirm button"
 @onready var guest_back_button = $"Guest Connect Account Panel/Panel/Cancel Button"
 @onready var guest_warning_text = $"Guest Connect Account Panel/Panel/Warning text"
+@onready var guest_animation = $"Guest Connect Account Panel/Guest Animation Player"
 
 #profile panel contents
-@onready var player_in_game_name_label = $"Profile Modal/In Game Name Label"
-@onready var player_gameID_label = $"Profile Modal/Game ID Label"
-@onready var player_description_label = $"Profile Modal/Description Label"
-@onready var player_profile_view = $"Profile Modal/Profile View"
+@onready var player_in_game_name_label = $"Profile Modal/Panel/In Game Name Label"
+@onready var player_gameID_label = $"Profile Modal/Panel/Game ID Label"
+@onready var player_description_label = $"Profile Modal/Panel/Description Label"
+@onready var player_profile_view = $"Profile Modal/Panel/Profile View"
 
-@onready var warning_text = $"Profile Modal/Warning Text"
+@onready var warning_text = $"Profile Modal/Panel/Warning Text"
 
-@onready var in_game_name_input =  $"Profile Modal/In Game Name Input"
-@onready var description_input =  $"Profile Modal/Description Input"
+@onready var in_game_name_input =  $"Profile Modal/Panel/In Game Name Input"
+@onready var description_input =  $"Profile Modal/Panel/Description Input"
 
-@onready var edit_profile_button = $"Profile Modal/Edit Button"
-@onready var cancel_edit_profile_button = $"Profile Modal/Cancel Edit Button"
-@onready var save_edit_profile_button =  $"Profile Modal/Save Edit Button"
+@onready var edit_profile_button = $"Profile Modal/Panel/Edit Button"
+@onready var cancel_edit_profile_button = $"Profile Modal/Panel/Cancel Edit Button"
+@onready var save_edit_profile_button =  $"Profile Modal/Panel/Save Edit Button"
 
 #other player's profile modal stuff
 @onready var active_player_btn = $"Show Players button"
@@ -121,26 +124,27 @@ func load_player_list():
 	var list = GetPlayerInfo.active_player_dic
 	
 	for child in player_list_container.get_children():
-		print(list)
-		print(child.name)
 		if child.name not in list.keys():
 			child.queue_free()
 	
-	for player in list:
-		if not player_list_container.has_node(player):
-			var player_gameID = list[player]["Player_GameID"]
+	for gameID in list:	
+		if not player_list_container.has_node(gameID):
+			var player_username = list[gameID]["Player_username"]
+			var player_IGN = list[gameID]["Player_IGN"]
 			
 			var player_btn = player_name_list.duplicate()
-			player_btn.name = player
-			player_btn.text = player
+			player_btn.name = gameID
+			player_btn.text = "%s (%s)" % [player_IGN, gameID]
 			player_btn.visible = true
-			player_btn.connect("mouse_entered", func(): get_player_data(player, player_gameID))
+			
+			player_btn.connect("mouse_entered", func(): get_player_data(player_username, gameID))
 			player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
 			player_list_container.add_child(player_btn)
 
-func get_player_data(username, playerGameID):
+func get_player_data(username, playerGameID):	
 	player_info_panel.visible = true
-	var result = await GetPlayerInfo.get_player_info(username)
+	
+	var result = await GetPlayerInfo.get_player_info(username, playerGameID)
 	
 	if result.has("status") and result["status"] == "Success":
 		jplayer_name_label.text = result["player_IGN"]
@@ -211,7 +215,11 @@ func save_profile_edit():
 			})
 	
 func status_panel(status: bool, panel: Panel):
-	panel.visible = status
+	if status:
+		panel.visible = status
+		guest_animation.play("pop")
+	else:
+		guest_animation.play_backwards("pop")
 	PlayerGlobalScript.isModalOpen = status
 	PlayerGlobalScript.current_modal_open = status
 	
@@ -337,3 +345,9 @@ func _on_player_list_http_request_request_completed(_result: int, response_code:
 			print("Failed to load image from buffer:", err)
 	else:
 		print("HTTP request failed with code:", response_code)
+
+
+func _on_guest_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "pop":
+		if PlayerGlobalScript.isModalOpen == false:
+			guest_connect_account_panel.visible = false

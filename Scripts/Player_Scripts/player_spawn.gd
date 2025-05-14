@@ -24,11 +24,12 @@ func _process(_delta: float) -> void:
 			
 			if data.get("Player_inGameName"):
 				if not stored_players.has(data.get("Player_GameID")):
-					
-					GetPlayerInfo.active_player_dic[data.get("Player_username")] = {
-						"Player_GameID": data.get("Player_GameID")
+					GetPlayerInfo.active_player_dic[data.get("Player_GameID")] = {
+						"Player_username": data.get("Player_username"),
+						"Player_IGN": data.get("Player_inGameName"),
+						"isFetched": false
 					}
-					
+				
 					stored_players[data.get("Player_GameID")] = {
 						"Player": player,
 						"Position": Vector2(2351.0, -161.0),

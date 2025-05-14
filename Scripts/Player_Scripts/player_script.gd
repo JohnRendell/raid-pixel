@@ -23,7 +23,7 @@ func play_punch_animation():
 	elif isUp:
 		play_anim("back_punch_anim")
 	elif isDown:
-		play_anim("front_punch_anima")
+		play_anim("front_punch_anim")
 	
 func _process(_delta: float) -> void:
 	if prev_ign != PlayerGlobalScript.player_in_game_name:

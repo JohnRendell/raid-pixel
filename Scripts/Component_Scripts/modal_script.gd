@@ -3,9 +3,13 @@ extends Node
 @onready var modal_panel = $"."
 @onready var modal_close_button = $"Background Panel/Panel/Close Button"
 @onready var modal_label = $"Background Panel/Panel/Modal Label"
+@onready var modal_anim = $"AnimationPlayer"
 @export var modal_open_button: Button
 
 @export var label = "Label of the modal"
+
+var isOpen = false
+var isAnimDone = false
 
 func _ready() -> void:
 	modal_panel.visible = false
@@ -14,19 +18,27 @@ func _ready() -> void:
 	modal_label.text = label
 	
 func modal_status(status: bool):
+	isAnimDone = false
+	
 	if status:
 		if PlayerGlobalScript.current_modal_open == false:
-			modal_panel.visible = status
-			PlayerGlobalScript.isModalOpen = status
-			PlayerGlobalScript.current_modal_open = status
+			modal_panel.visible = true
+			modal_anim.play("pop")
+			isOpen = true
 	else:
-		PlayerGlobalScript.current_modal_open = status
-		modal_panel.visible = status
-		PlayerGlobalScript.isModalOpen = status
-		PlayerGlobalScript.current_modal_open = status
+		modal_anim.play_backwards("pop")
+		isOpen = false
 	
 func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
 	
 	if socket_status == "Disconnected":
 		modal_panel.visible = false
+
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "pop":
+		modal_panel.visible = isOpen
+		PlayerGlobalScript.isModalOpen = isOpen
+		PlayerGlobalScript.current_modal_open = isOpen
+		isAnimDone = isOpen

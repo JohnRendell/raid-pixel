@@ -3,11 +3,11 @@ extends Node
 @onready var login_modal = $"CanvasLayer/Log in Modal"
 
 #login modal components
-@onready var warning_text = $"CanvasLayer/Log in Modal/Warning Text"
-@onready var login_proceed_btn = $"CanvasLayer/Log in Modal/Proceed Button"
-@onready var username_input = $"CanvasLayer/Log in Modal/Username Input"
-@onready var password_input = $"CanvasLayer/Log in Modal/Password Input"
-@onready var guest_proceed_btn = $"CanvasLayer/Log in Modal/Guest Button Log in"
+@onready var warning_text = $"CanvasLayer/Log in Modal/Panel/Warning Text"
+@onready var login_proceed_btn = $"CanvasLayer/Log in Modal/Panel/Proceed Button"
+@onready var username_input = $"CanvasLayer/Log in Modal/Panel/Username Input"
+@onready var password_input = $"CanvasLayer/Log in Modal/Panel/Password Input"
+@onready var guest_proceed_btn = $"CanvasLayer/Log in Modal/Panel/Guest Button Log in"
 
 #validation modal
 @onready var validation_modal = $"CanvasLayer/Validation Modal"

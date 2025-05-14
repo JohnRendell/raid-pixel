@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://8rgjicfdvqhp"]
+[gd_scene load_steps=36 format=4 uid="uid://8rgjicfdvqhp"]
 
 [ext_resource type="Texture2D" uid="uid://dwdx3y18mesh8" path="res://Assets/Background_Images/Welcome_Background.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://dr316xe76b3yx" path="res://Scripts/Main_Menu_Scripts/menu_script.gd" id="1_opfnp"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="4_ce3w2"]
 [ext_resource type="PackedScene" uid="uid://b6t8xx3gr8l6u" path="res://Interface_Scenes/Modal.tscn" id="5_n45e2"]
 [ext_resource type="Theme" uid="uid://baplrp3fy6wpv" path="res://Assets/Theme/Proceed_Button.tres" id="7_cp0ys"]
+[ext_resource type="Script" uid="uid://c7r34sfahcg13" path="res://Scripts/Component_Scripts/modal_subScript.gd" id="7_t1dhk"]
 [ext_resource type="Theme" uid="uid://bxfr8qxrfbs8d" path="res://Assets/Theme/Default_LineEdit.tres" id="7_vr1f0"]
 [ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="8_yhxw7"]
 [ext_resource type="PackedScene" uid="uid://d0o2bdbmktvg3" path="res://Interface_Scenes/Validation_modal.tscn" id="9_trj04"]
@@ -48,6 +49,8 @@ _data = {
 &"RESET": SubResource("Animation_ce3w2"),
 &"idle_btn": SubResource("Animation_1ehe0")
 }
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t1dhk"]
 
 [sub_resource type="Image" id="Image_vr1f0"]
 data = {
@@ -2099,10 +2102,29 @@ autoplay = "idle_btn"
 visible = false
 
 [node name="Log in Modal" parent="CanvasLayer" node_paths=PackedStringArray("modal_open_button") instance=ExtResource("5_n45e2")]
+visible = false
 modal_open_button = NodePath("../UI Buttons/Play Button")
 label = "Log in"
 
-[node name="Username Input" type="LineEdit" parent="CanvasLayer/Log in Modal"]
+[node name="Panel" type="Panel" parent="CanvasLayer/Log in Modal" node_paths=PackedStringArray("modal_panel")]
+custom_minimum_size = Vector2(1310, 700)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -655.0
+offset_top = -350.0
+offset_right = 655.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_t1dhk")
+script = ExtResource("7_t1dhk")
+modal_panel = NodePath("..")
+
+[node name="Username Input" type="LineEdit" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 30)
 layout_mode = 1
 anchors_preset = 8
@@ -2111,9 +2133,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -122.0
+offset_top = -123.5
 offset_right = 150.0
-offset_bottom = -92.0
+offset_bottom = -90.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("7_vr1f0")
@@ -2123,7 +2145,7 @@ max_length = 20
 emoji_menu_enabled = false
 caret_blink = true
 
-[node name="Username label" type="RichTextLabel" parent="CanvasLayer/Log in Modal"]
+[node name="Username label" type="RichTextLabel" parent="CanvasLayer/Log in Modal/Panel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2144,7 +2166,7 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Password Input" type="LineEdit" parent="CanvasLayer/Log in Modal"]
+[node name="Password Input" type="LineEdit" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 30)
 layout_mode = 1
 anchors_preset = 8
@@ -2153,9 +2175,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -24.0
+offset_top = -25.5
 offset_right = 150.0
-offset_bottom = 6.0
+offset_bottom = 7.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("7_vr1f0")
@@ -2166,7 +2188,7 @@ emoji_menu_enabled = false
 caret_blink = true
 secret = true
 
-[node name="Password label" type="RichTextLabel" parent="CanvasLayer/Log in Modal"]
+[node name="Password label" type="RichTextLabel" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 20)
 layout_mode = 1
 anchors_preset = 8
@@ -2188,25 +2210,7 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Proceed Button" type="Button" parent="CanvasLayer/Log in Modal"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -42.5
-offset_top = 139.0
-offset_right = 42.5
-offset_bottom = 179.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_default_cursor_shape = 2
-theme = ExtResource("7_cp0ys")
-action_mode = 0
-text = "Proceed"
-
-[node name="Create Account Btn" type="LinkButton" parent="CanvasLayer/Log in Modal"]
+[node name="Create Account Btn" type="LinkButton" parent="CanvasLayer/Log in Modal/Panel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -2214,9 +2218,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -78.5
-offset_top = -210.0
+offset_top = -38.0
 offset_right = 78.5
-offset_bottom = -185.0
+offset_bottom = -13.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(5.19812e-06, 0, 0.931491, 1)
@@ -2230,7 +2234,7 @@ text = "Create Account"
 underline = 1
 uri = "http://localhost:8080"
 
-[node name="Warning Text" type="RichTextLabel" parent="CanvasLayer/Log in Modal"]
+[node name="Warning Text" type="RichTextLabel" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 20)
 layout_mode = 1
 anchors_preset = 8
@@ -2252,7 +2256,25 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="or label" type="RichTextLabel" parent="CanvasLayer/Log in Modal"]
+[node name="Proceed Button" type="Button" parent="CanvasLayer/Log in Modal/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.5
+offset_top = 129.0
+offset_right = 42.5
+offset_bottom = 169.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("7_cp0ys")
+action_mode = 0
+text = "Proceed"
+
+[node name="or label" type="RichTextLabel" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 20)
 layout_mode = 1
 anchors_preset = 7
@@ -2261,9 +2283,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -150.0
-offset_top = -350.0
+offset_top = -178.0
 offset_right = 150.0
-offset_bottom = -325.0
+offset_bottom = -153.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
@@ -2274,7 +2296,7 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Guest Button Log in" type="Button" parent="CanvasLayer/Log in Modal"]
+[node name="Guest Button Log in" type="Button" parent="CanvasLayer/Log in Modal/Panel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -2282,9 +2304,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -69.0
-offset_top = -318.0
+offset_top = -146.0
 offset_right = 69.0
-offset_bottom = -278.0
+offset_bottom = -106.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_default_cursor_shape = 2
