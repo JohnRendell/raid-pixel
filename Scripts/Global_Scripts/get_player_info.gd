@@ -2,6 +2,7 @@ extends Node
 
 var active_player_dic: Dictionary
 
+#TODO: do something on this one, perhaps a timer after fetched, so the new data still be able to get.
 func get_player_info(player_username: String, dic_key):
 	if not active_player_dic[dic_key]["isFetched"]:
 		active_player_dic[dic_key]["isFetched"] = true

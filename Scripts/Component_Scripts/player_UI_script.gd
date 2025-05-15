@@ -45,17 +45,6 @@ extends Global_Message
 @onready var cancel_edit_profile_button = $"Profile Modal/Panel/Cancel Edit Button"
 @onready var save_edit_profile_button =  $"Profile Modal/Panel/Save Edit Button"
 
-#other player's profile modal stuff
-@onready var active_player_btn = $"Show Players button"
-@onready var player_list_container = $"Active Player Modal/Player's list container"
-@onready var player_name_list = $"Active Player Modal/Player Name"
-@onready var player_info_panel = $"Player's Info Panel"
-@onready var jplayer_name_label = $"Player's Info Panel/Player In Game Name"
-@onready var jplayer_description_label = $"Player's Info Panel/Description"
-@onready var jplayer_profile = $"Player's Info Panel/Player profile"
-@onready var jplayer_gameID = $"Player's Info Panel/Player Game ID"
-@onready var j_http_request = $"player_list_HTTPRequest"
-
 #for passing data
 var prev_count = ""
 var prev_coordinates = Vector2.ZERO
@@ -98,8 +87,6 @@ func _ready() -> void:
 	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
-	
-	player_info_panel.visible = false
 		
 	var data = await player_profile_class.get_player_data(http_request)
 	if data["status"] == "Finished":
@@ -119,44 +106,6 @@ func _ready() -> void:
 	
 	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
-	
-	active_player_btn.connect("pressed", load_player_list)
-	
-func load_player_list():
-	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
-		PlayerGlobalScript.current_modal_open = true
-		PlayerGlobalScript.isModalOpen = true
-		
-		var list = GetPlayerInfo.active_player_dic
-		
-		for child in player_list_container.get_children():
-			if child.name not in list.keys():
-				child.queue_free()
-		
-		for gameID in list:	
-			if not player_list_container.has_node(gameID):
-				var player_username = list[gameID]["Player_username"]
-				var player_IGN = list[gameID]["Player_IGN"]
-				
-				var player_btn = player_name_list.duplicate()
-				player_btn.name = gameID
-				player_btn.text = "%s (%s)" % [player_IGN, gameID]
-				player_btn.visible = true
-				
-				player_btn.connect("mouse_entered", func(): get_player_data(player_username, gameID))
-				player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
-				player_list_container.add_child(player_btn)
-
-func get_player_data(username, playerGameID):	
-	player_info_panel.visible = true
-	
-	var result = await GetPlayerInfo.get_player_info(username, playerGameID)
-	
-	if result.has("status") and result["status"] == "Success":
-		jplayer_name_label.text = result["player_IGN"]
-		jplayer_description_label.text = result["player_description"]
-		jplayer_gameID.text = playerGameID
-		j_http_request.request(result["player_profile"])
 		
 func going_off_world():
 	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
@@ -338,20 +287,6 @@ func _on_http_request_request_completed(_result: int, response_code: int, _heade
 			var texture = ImageTexture.create_from_image(image)
 			player_profile.texture = texture
 			player_profile_view.texture = texture
-		else:
-			print("Failed to load image from buffer:", err)
-	else:
-		print("HTTP request failed with code:", response_code)
-
-
-func _on_player_list_http_request_request_completed(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
-	if response_code == 200:
-		var image = Image.new()
-		var err = image.load_png_from_buffer(body)
-		
-		if err == OK:
-			var texture = ImageTexture.create_from_image(image)
-			jplayer_profile.texture = texture
 		else:
 			print("Failed to load image from buffer:", err)
 	else:
