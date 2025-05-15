@@ -80,6 +80,7 @@ func _ready() -> void:
 	guest_warning_panel.visible = true if PlayerGlobalScript.player_account_type == "Guest" else false
 	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
 	
+	guestAccountButton.focus_mode = Control.FOCUS_NONE
 	guestAccountButton.connect("pressed", func(): status_panel(true, guest_connect_account_panel))
 	guest_warning_panel_button.connect("pressed", func(): guest_warning_panel.visible = false)
 	guest_back_button.connect("pressed", func(): status_panel(false, guest_connect_account_panel))
@@ -112,6 +113,7 @@ func _ready() -> void:
 		
 	#for button and other stuff
 	var current_scene = PlayerGlobalScript.current_scene
+	off_world_button.focus_mode = Control.FOCUS_NONE
 	off_world_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 	off_world_button.connect("pressed", going_off_world)
 	
@@ -121,25 +123,29 @@ func _ready() -> void:
 	active_player_btn.connect("pressed", load_player_list)
 	
 func load_player_list():
-	var list = GetPlayerInfo.active_player_dic
-	
-	for child in player_list_container.get_children():
-		if child.name not in list.keys():
-			child.queue_free()
-	
-	for gameID in list:	
-		if not player_list_container.has_node(gameID):
-			var player_username = list[gameID]["Player_username"]
-			var player_IGN = list[gameID]["Player_IGN"]
-			
-			var player_btn = player_name_list.duplicate()
-			player_btn.name = gameID
-			player_btn.text = "%s (%s)" % [player_IGN, gameID]
-			player_btn.visible = true
-			
-			player_btn.connect("mouse_entered", func(): get_player_data(player_username, gameID))
-			player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
-			player_list_container.add_child(player_btn)
+	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
+		PlayerGlobalScript.current_modal_open = true
+		PlayerGlobalScript.isModalOpen = true
+		
+		var list = GetPlayerInfo.active_player_dic
+		
+		for child in player_list_container.get_children():
+			if child.name not in list.keys():
+				child.queue_free()
+		
+		for gameID in list:	
+			if not player_list_container.has_node(gameID):
+				var player_username = list[gameID]["Player_username"]
+				var player_IGN = list[gameID]["Player_IGN"]
+				
+				var player_btn = player_name_list.duplicate()
+				player_btn.name = gameID
+				player_btn.text = "%s (%s)" % [player_IGN, gameID]
+				player_btn.visible = true
+				
+				player_btn.connect("mouse_entered", func(): get_player_data(player_username, gameID))
+				player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
+				player_list_container.add_child(player_btn)
 
 func get_player_data(username, playerGameID):	
 	player_info_panel.visible = true
@@ -153,13 +159,14 @@ func get_player_data(username, playerGameID):
 		j_http_request.request(result["player_profile"])
 		
 func going_off_world():
-	SocketClient.send_data({
-		"Socket_Name": "going_offWorld",
-		"Player_GameID": PlayerGlobalScript.player_game_id
-	})
-	
-	loading_modal.visible = true
-	loading_modal.load("res://Scenes/map_scene.tscn")
+	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
+		SocketClient.send_data({
+			"Socket_Name": "going_offWorld",
+			"Player_GameID": PlayerGlobalScript.player_game_id
+		})
+		
+		loading_modal.visible = true
+		loading_modal.load("res://Scenes/map_scene.tscn")
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)
@@ -216,53 +223,57 @@ func save_profile_edit():
 	
 func status_panel(status: bool, panel: Panel):
 	if status:
-		panel.visible = status
-		guest_animation.play("pop")
+		if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
+			panel.visible = status
+			guest_animation.play("pop")
 	else:
 		guest_animation.play_backwards("pop")
 	PlayerGlobalScript.isModalOpen = status
 	PlayerGlobalScript.current_modal_open = status
 	
 func upgrade_account():
-	validation_modal.visible = true
-	
-	#for inputs
-	if not guest_password_input.text or not guest_confirm_password_input.text:
-		guest_warning_text.visible = true
-		guest_warning_text.text = "Fields cannot be empty!."
+	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
+		PlayerGlobalScript.current_modal_open = true
+		PlayerGlobalScript.isModalOpen = true
+		validation_modal.visible = true
 		
-		guest_password_input.get_theme_stylebox("normal").border_color = "red"
-		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
-	
-	elif len(guest_password_input.text) <= 4:
-		guest_warning_text.visible = true
-		guest_warning_text.text = "Password should be 5 characters above."
-		
-		guest_password_input.get_theme_stylebox("normal").border_color = "red"
-		
-	elif guest_password_input.text != guest_confirm_password_input.text:
-		guest_warning_text.visible = true
-		guest_warning_text.text = "Password should match."
-		
-		guest_password_input.get_theme_stylebox("normal").border_color = "red"
-		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
-		
-	else:
-		var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/connectAccount", { "username": PlayerGlobalScript.player_username, "password": guest_password_input.text })
-		
-		if result["status"] == "Success":
-			guest_connect_account_panel.visible = false
-			guest_connect_success_panel.visible = true
+		#for inputs
+		if not guest_password_input.text or not guest_confirm_password_input.text:
+			guest_warning_text.visible = true
+			guest_warning_text.text = "Fields cannot be empty!."
 			
-			PlayerGlobalScript.player_account_type = result["accountType"]
+			guest_password_input.get_theme_stylebox("normal").border_color = "red"
+			guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
+		
+		elif len(guest_password_input.text) <= 4:
+			guest_warning_text.visible = true
+			guest_warning_text.text = "Password should be 5 characters above."
+			
+			guest_password_input.get_theme_stylebox("normal").border_color = "red"
+			
+		elif guest_password_input.text != guest_confirm_password_input.text:
+			guest_warning_text.visible = true
+			guest_warning_text.text = "Password should match."
+			
+			guest_password_input.get_theme_stylebox("normal").border_color = "red"
+			guest_confirm_password_input.get_theme_stylebox("normal").border_color = "red"
+			
 		else:
-			guest_warning_text.text = result["status"]
+			var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/connectAccount", { "username": PlayerGlobalScript.player_username, "password": guest_password_input.text })
 			
-		guest_password_input.get_theme_stylebox("normal").border_color = "black"
-		guest_confirm_password_input.get_theme_stylebox("normal").border_color = "black"
-		
-	validation_modal.visible = false
-	guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
+			if result["status"] == "Success":
+				guest_connect_account_panel.visible = false
+				guest_connect_success_panel.visible = true
+				
+				PlayerGlobalScript.player_account_type = result["accountType"]
+			else:
+				guest_warning_text.text = result["status"]
+				
+			guest_password_input.get_theme_stylebox("normal").border_color = "black"
+			guest_confirm_password_input.get_theme_stylebox("normal").border_color = "black"
+			
+		validation_modal.visible = false
+		guestAccountButton.visible =  true if PlayerGlobalScript.player_account_type == "Guest" else false
 		
 func _process(_delta: float) -> void:
 	player_profile_class.render_player_profile_data(player_in_game_name_label, player_gameID_label, player_description_label)
@@ -345,7 +356,6 @@ func _on_player_list_http_request_request_completed(_result: int, response_code:
 			print("Failed to load image from buffer:", err)
 	else:
 		print("HTTP request failed with code:", response_code)
-
 
 func _on_guest_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "pop":

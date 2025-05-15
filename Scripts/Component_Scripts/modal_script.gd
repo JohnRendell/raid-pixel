@@ -12,6 +12,9 @@ var isOpen = false
 var isAnimDone = false
 
 func _ready() -> void:
+	modal_open_button.focus_mode = Control.FOCUS_NONE
+	modal_close_button.focus_mode = Control.FOCUS_NONE
+
 	modal_panel.visible = false
 	modal_open_button.connect("pressed", func (): modal_status(true))
 	modal_close_button.connect("pressed", func (): modal_status(false))
@@ -25,9 +28,13 @@ func modal_status(status: bool):
 			modal_panel.visible = true
 			modal_anim.play("pop_modal")
 			isOpen = true
+			PlayerGlobalScript.isModalOpen = isOpen
+			PlayerGlobalScript.current_modal_open = isOpen
 	else:
 		modal_anim.play_backwards("pop_modal")
 		isOpen = false
+		PlayerGlobalScript.isModalOpen = isOpen
+		PlayerGlobalScript.current_modal_open = isOpen
 	
 func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
@@ -39,6 +46,4 @@ func _process(_delta: float) -> void:
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "pop_modal":
 		modal_panel.visible = isOpen
-		PlayerGlobalScript.isModalOpen = isOpen
-		PlayerGlobalScript.current_modal_open = isOpen
 		isAnimDone = isOpen
