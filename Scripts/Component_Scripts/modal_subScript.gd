@@ -1,7 +1,7 @@
 extends Node
 
 @onready var panel = $"."
-@export var modal_panel = Control
+@export var modal_panel = Panel
 
 var prev_status = true
 

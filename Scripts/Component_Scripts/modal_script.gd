@@ -1,8 +1,8 @@
 extends Node
 
 @onready var modal_panel = $"."
-@onready var modal_close_button = $"Background Panel/Panel/Close Button"
-@onready var modal_label = $"Background Panel/Panel/Modal Label"
+@onready var modal_close_button = $"Panel Container/Close Button"
+@onready var modal_label = $"Panel Container/Modal Label"
 @onready var modal_anim = $"AnimationPlayer"
 @export var modal_open_button: Button
 
@@ -23,10 +23,10 @@ func modal_status(status: bool):
 	if status:
 		if PlayerGlobalScript.current_modal_open == false:
 			modal_panel.visible = true
-			modal_anim.play("pop")
+			modal_anim.play("pop_modal")
 			isOpen = true
 	else:
-		modal_anim.play_backwards("pop")
+		modal_anim.play_backwards("pop_modal")
 		isOpen = false
 	
 func _process(_delta: float) -> void:
@@ -37,7 +37,7 @@ func _process(_delta: float) -> void:
 
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "pop":
+	if anim_name == "pop_modal":
 		modal_panel.visible = isOpen
 		PlayerGlobalScript.isModalOpen = isOpen
 		PlayerGlobalScript.current_modal_open = isOpen

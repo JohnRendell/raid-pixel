@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bmd3ng803m6f5" path="res://Assets/Web_UI_Components/close_button.png" id="1_e73ql"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="3_faomv"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64dyc"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_faomv"]
 bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e73ql"]
@@ -31,30 +31,30 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Panel:position")
+tracks/1/path = NodePath("Panel Container:theme_override_styles/panel:bg_color")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(291, -424)]
+"values": [Color(1, 1, 1, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Panel:theme_override_styles/panel:bg_color")
+tracks/2/path = NodePath("Panel Container:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0)]
+"values": [Vector2(291, -424)]
 }
 
 [sub_resource type="Animation" id="Animation_faomv"]
-resource_name = "pop"
+resource_name = "pop_modal"
 length = 0.6
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -71,54 +71,45 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Panel:position")
+tracks/1/path = NodePath("Panel Container:theme_override_styles/panel:bg_color")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(291, -424), Vector2(291, 146.5)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Panel:theme_override_styles/panel:bg_color")
+tracks/2/path = NodePath("Panel Container:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Vector2(291, -424), Vector2(291, 146.5)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mhx23"]
 _data = {
 &"RESET": SubResource("Animation_mhx23"),
-&"pop": SubResource("Animation_faomv")
+&"pop_modal": SubResource("Animation_faomv")
 }
 
-[node name="Modal" type="Control"]
+[node name="Modal" type="Panel"]
 z_index = 18
-layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_faomv")
 script = ExtResource("1_2gg76")
 
-[node name="Background Panel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_64dyc")
-
-[node name="Panel" type="Panel" parent="Background Panel"]
+[node name="Panel Container" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -133,7 +124,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_e73ql")
 
-[node name="Close Button" type="Button" parent="Background Panel/Panel"]
+[node name="Close Button" type="Button" parent="Panel Container"]
 z_index = 1
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -152,7 +143,7 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="Modal Label" type="RichTextLabel" parent="Background Panel/Panel"]
+[node name="Modal Label" type="RichTextLabel" parent="Panel Container"]
 custom_minimum_size = Vector2(600, 30)
 layout_mode = 1
 anchors_preset = 5
@@ -173,7 +164,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../Background Panel")
 libraries = {
 &"": SubResource("AnimationLibrary_mhx23")
 }
