@@ -2,10 +2,10 @@ extends Node
 
 var active_player_dic: Dictionary
 
-#TODO: do something on this one, perhaps a timer after fetched, so the new data still be able to get.
 func get_player_info(player_username: String, dic_key):
 	if not active_player_dic[dic_key]["isFetched"]:
 		active_player_dic[dic_key]["isFetched"] = true
+		
 		var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "playerInformation/playerData", { "username": player_username })
 
 		if result.has("status") and result["status"] == "Success":
@@ -15,6 +15,7 @@ func get_player_info(player_username: String, dic_key):
 				"player_description": result["description"],
 				"player_profile": result["profile"]
 			}
+		
 	return 	{
 		"status": "Fetched"
 	}

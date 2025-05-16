@@ -43,19 +43,28 @@ func load_player_list():
 			if child.name not in list.keys():
 				child.queue_free()
 		
-		for gameID in list:	
+		for gameID in list:
+			var player_username = list[gameID]["Player_username"]
+			var player_IGN = list[gameID]["Player_IGN"]
+			
 			if not player_list_container.has_node(gameID):
-				var player_username = list[gameID]["Player_username"]
-				var player_IGN = list[gameID]["Player_IGN"]
-				
 				var player_btn = player_name_button.duplicate()
 				player_btn.name = gameID
 				player_btn.text = "%s (%s)" % [player_IGN, gameID]
+			
 				player_btn.visible = true
 				
 				player_btn.connect("mouse_entered", func(): get_player_data(player_username, gameID))
 				player_btn.connect("mouse_exited", func(): player_info_panel.visible = false)
 				player_list_container.add_child(player_btn)
+				
+			else:
+				var player_btn = player_list_container.get_node(gameID)
+				player_btn.text = "%s (%s)" % [player_IGN, gameID]
+			
+			if list[gameID]["isFetched"]:
+				await get_tree().create_timer(0.5).timeout
+				list[gameID]["isFetched"] = false
 				
 func get_player_data(username, playerGameID):	
 	player_info_panel.visible = true

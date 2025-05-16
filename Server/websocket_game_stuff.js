@@ -121,6 +121,9 @@ async function deleteGuestPlayer_account(username) {
         if(deleteAcc){
             await playerInfoModel.findOneAndDelete({ username: username });
         }
+        else{
+            await accountModel.findOneAndUpdate({ username: username }, { $set: { isOnline: false }, new: true })
+        }
         
     }
     catch(err){

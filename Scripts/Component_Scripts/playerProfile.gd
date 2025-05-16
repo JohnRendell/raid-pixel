@@ -11,11 +11,12 @@ var prev_description = ""
 #for profile
 var description_profile = ""
 
-func edit_profile_status(status: bool, in_game_name_input: LineEdit, description_input: TextEdit, cancel_edit_profile_button: Button, save_edit_profile_button: Button, edit_profile_button: Button, player_in_game_name_label: RichTextLabel, player_description_label: RichTextLabel):
+func edit_profile_status(status: bool, in_game_name_input: LineEdit, description_input: TextEdit, cancel_edit_profile_button: Button, save_edit_profile_button: Button, edit_profile_button: Button, player_in_game_name_label: RichTextLabel, player_description_label: RichTextLabel, change_profile_button: Button):
 	in_game_name_input.visible = status
 	description_input.visible = status
 	cancel_edit_profile_button.visible = status
 	save_edit_profile_button.visible = status
+	change_profile_button.visible = status
 	
 	edit_profile_button.visible = !status
 	

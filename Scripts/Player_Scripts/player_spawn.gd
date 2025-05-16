@@ -66,10 +66,13 @@ func _process(_delta: float) -> void:
 		elif data.get("Socket_Name") and prev_data != data and data.get("Socket_Name") == "ModifyProfile":
 			prev_data = data
 			
-			if data.has("Player_GameID") and stored_players.has(data.get("Player_GameID")):
+			if data.has("Player_GameID") and stored_players.has(data.get("Player_GameID")) and GetPlayerInfo.active_player_dic.has(data.get("Player_GameID")):
+				
+				var player_key_list = GetPlayerInfo.active_player_dic[data.get("Player_GameID")] 
 				var joined_player_data = stored_players[data.get("Player_GameID")]
 				var joined_player = joined_player_data["Player"]
 				
+				player_key_list.Player_IGN = data.get("Player_inGameName")
 				joined_player.playerIGN = data.get("Player_inGameName")
 		
 

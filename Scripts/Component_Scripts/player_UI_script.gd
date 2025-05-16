@@ -40,6 +40,7 @@ extends Global_Message
 
 @onready var in_game_name_input =  $"Profile Modal/Panel/In Game Name Input"
 @onready var description_input =  $"Profile Modal/Panel/Description Input"
+@onready var change_profile_button = $"Profile Modal/Panel/Change Profile Button"
 
 @onready var edit_profile_button = $"Profile Modal/Panel/Edit Button"
 @onready var cancel_edit_profile_button = $"Profile Modal/Panel/Cancel Edit Button"
@@ -83,9 +84,11 @@ func _ready() -> void:
 	save_edit_profile_button.visible = false
 	cancel_edit_profile_button.visible = false
 	edit_profile_button.visible = true
+	change_profile_button.visible = false
 	
-	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
-	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label))
+	change_profile_button.connect("pressed", func(): print("test"))
+	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button))
+	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
 		
 	var data = await player_profile_class.get_player_data(http_request)
@@ -106,6 +109,10 @@ func _ready() -> void:
 	
 	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
+	
+	#set the player online
+	await get_tree().create_timer(1.0).timeout
+	await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/setOnline", { "username": PlayerGlobalScript.player_username })
 		
 func going_off_world():
 	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
@@ -162,7 +169,7 @@ func save_profile_edit():
 			PlayerGlobalScript.player_in_game_name = result["inGameName"]
 			player_profile_class.description_profile = result["description"]
 			
-			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label)
+			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button)
 			
 			SocketClient.send_data({
 				"Socket_Name": "ModifyProfile",

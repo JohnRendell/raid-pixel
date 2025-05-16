@@ -14,6 +14,7 @@ route.post("/validateAccount", async (req, res)=>{
         let username = "Not found";
         let login_token = "Not found";
         let player_account_type = "Not found";
+        let isOnline = false
 
         if(findAcc){
             let passwordCorrect = await bcrypt.compare(sanitize(req.body.password), findAcc.password)
@@ -23,14 +24,25 @@ route.post("/validateAccount", async (req, res)=>{
                 username = findAcc.username;
                 login_token = findAcc.login_token;
                 player_account_type = findAcc.account_type;
+                isOnline = findAcc.isOnline
             }
         }
-        res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type });
+        res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type, isOnline: isOnline });
     }
     catch(err){
         console.log(err);
     }
 });
+
+route.post("/setOnline", async (req, res)=>{
+    try{
+        
+        await accountModel.findOneAndUpdate({ username: req.body.username }, { $set: { isOnline: true }}, { new: true })
+    }
+    catch(err){
+        console.log(err)
+    }
+})
 
 function hash_pass(pass){
     const salt = bcrypt.genSaltSync(10);
@@ -92,7 +104,7 @@ route.post("/createAccount", async (req, res) =>{
             status = "Username already taken!";
         }
         else{
-            await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(sanitize(req.body.password)), account_type: "Player", login_token: uuidv4() });
+            await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(sanitize(req.body.password)), account_type: "Player", login_token: uuidv4(), isOnline: true });
            
             await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
             status = "Success";
@@ -117,7 +129,7 @@ route.post("/createGuestAccount", async (req, res)=>{
             return retVal;
         }
 
-        const createAcc = await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(generatePassword()), account_type: "Guest", login_token: uuidv4() });
+        const createAcc = await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(generatePassword()), account_type: "Guest", login_token: uuidv4(), isOnline: true });
         
         let status = "failed";
         let username = "Not Found";
@@ -140,6 +152,8 @@ route.post("/createGuestAccount", async (req, res)=>{
     }
 });
 
+let first_come_first_serve = []
+
 route.post("/auth_auto_login", async (req, res)=>{
     try{
         let login_token = req.body.login_token;
@@ -148,6 +162,21 @@ route.post("/auth_auto_login", async (req, res)=>{
         let username = "Not found";
         let player_account_type = "Not Found";
         let UUID = "Not Found";
+        let client_token_result = { client_result: "Failed" }
+
+        let data_obj = req.body.client_token
+        first_come_first_serve.push(data_obj)
+
+        const filterUser = first_come_first_serve.filter(data => data.username === data_obj.username)
+        let token_status = filterUser.length == 1 ? "Accepted" : "Rejected";
+
+        client_token_result = { username: data_obj.username, token: data_obj.token, status: token_status }
+
+        const tokenToRemove = data_obj.token;
+        setTimeout(() => {
+            const index = first_come_first_serve.findIndex(t => t.token === tokenToRemove);
+            if (index >= 0) first_come_first_serve.splice(index, 1);
+        }, 5000);
 
         const findUser = await accountModel.findOne({ username: req.body.username, login_token: login_token });
 
@@ -156,6 +185,7 @@ route.post("/auth_auto_login", async (req, res)=>{
             username = findUser.username;
             player_account_type = findUser.account_type;
             UUID = findUser.login_token;
+            client_token_result = client_token_result;
         }
         else{
             const findUser = await accountModel.findOne({ username: req.body.username });
@@ -168,7 +198,7 @@ route.post("/auth_auto_login", async (req, res)=>{
             }
         }
 
-        res.status(200).json({ status: status, username: username, player_type: player_account_type, UUID: UUID })
+        res.status(200).json({ status: status, username: username, player_type: player_account_type, UUID: UUID, client_token_result: client_token_result })
     }
     catch(err){
         console.log(err);
