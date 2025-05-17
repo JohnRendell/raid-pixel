@@ -2,6 +2,8 @@ const express = require("express");
 const route = express.Router();
 const playerInfoModel = require("./playerInformationMongooseSchema");
 const sanitizeHTML = require("sanitize-html")
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 
 route.post("/playerData", async (req, res)=>{
     try{
@@ -27,8 +29,18 @@ route.post("/playerData", async (req, res)=>{
     }
 });
 
+function upload_image_imgur(profile){
+    try{
+        console.log(profile)
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
 route.post("/modifyPlayerData", async (req, res)=>{
     try{
+        upload_image_imgur(req.body.profile)
         const rawDescription = req.body.description || "";
         const cleanDescription = rawDescription.trim() === "" ? "No Description yet." : rawDescription;
 

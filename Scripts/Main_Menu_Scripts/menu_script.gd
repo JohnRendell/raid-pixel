@@ -21,6 +21,7 @@ extends Node
 
 #online warn panel
 @onready var online_warn = $"CanvasLayer/Online Panel Warning"
+@onready var online_warn_button = $"CanvasLayer/Online Panel Warning/Panel/Okay Button"
 
 func _ready() -> void:
 	warning_text.text = ""
@@ -31,6 +32,7 @@ func _ready() -> void:
 	
 	guest_proceed_btn.connect("pressed", login_as_guest)
 	login_proceed_btn.connect("pressed", proceed_login)
+	online_warn_button.connect("pressed", func(): online_warn.visible = false)
 	
 	auto_login()
 	

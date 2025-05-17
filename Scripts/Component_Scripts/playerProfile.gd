@@ -11,17 +11,21 @@ var prev_description = ""
 #for profile
 var description_profile = ""
 
-func edit_profile_status(status: bool, in_game_name_input: LineEdit, description_input: TextEdit, cancel_edit_profile_button: Button, save_edit_profile_button: Button, edit_profile_button: Button, player_in_game_name_label: RichTextLabel, player_description_label: RichTextLabel, change_profile_button: Button):
+func edit_profile_status(status: bool, in_game_name_input: LineEdit, description_input: TextEdit, cancel_edit_profile_button: Button, save_edit_profile_button: Button, edit_profile_button: Button, player_in_game_name_label: RichTextLabel, player_description_label: RichTextLabel, change_profile_button: Button, preview_profile: TextureRect, main_profile: TextureRect):
 	in_game_name_input.visible = status
 	description_input.visible = status
 	cancel_edit_profile_button.visible = status
 	save_edit_profile_button.visible = status
 	change_profile_button.visible = status
+	preview_profile.visible = status
 	
 	edit_profile_button.visible = !status
 	
 	player_in_game_name_label.visible = !status
 	player_description_label.visible = !status
+	main_profile.visible = !status
+	
+	preview_profile.texture = main_profile.texture
 
 func render_player_profile_data(player_in_game_name_label: RichTextLabel, player_gameID_label: RichTextLabel, player_description_label: RichTextLabel):
 	var inGameName = PlayerGlobalScript.player_in_game_name

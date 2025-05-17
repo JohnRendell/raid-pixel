@@ -6,6 +6,15 @@ const sanitize = require("sanitize-html");
 const bcrypt = require("bcryptjs")
 const { v4: uuidv4 } = require('uuid');
 
+async function setOnline(username){
+    try{
+        await accountModel.findOneAndUpdate({ username: username }, { $set: { isOnline: true }}, { new: true })
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
 route.post("/validateAccount", async (req, res)=>{
     try{
         const findAcc = await accountModel.findOne({ username: sanitize(req.body.username) })
@@ -25,6 +34,10 @@ route.post("/validateAccount", async (req, res)=>{
                 login_token = findAcc.login_token;
                 player_account_type = findAcc.account_type;
                 isOnline = findAcc.isOnline
+
+                if(!isOnline){
+                    setOnline(username)
+                }
             }
         }
         res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type, isOnline: isOnline });
@@ -33,16 +46,6 @@ route.post("/validateAccount", async (req, res)=>{
         console.log(err);
     }
 });
-
-route.post("/setOnline", async (req, res)=>{
-    try{
-        
-        await accountModel.findOneAndUpdate({ username: req.body.username }, { $set: { isOnline: true }}, { new: true })
-    }
-    catch(err){
-        console.log(err)
-    }
-})
 
 function hash_pass(pass){
     const salt = bcrypt.genSaltSync(10);
@@ -186,6 +189,10 @@ route.post("/auth_auto_login", async (req, res)=>{
             player_account_type = findUser.account_type;
             UUID = findUser.login_token;
             client_token_result = client_token_result;
+
+            if(client_token_result.status == "Accepted"){
+                setOnline(username)
+            }
         }
         else{
             const findUser = await accountModel.findOne({ username: req.body.username });

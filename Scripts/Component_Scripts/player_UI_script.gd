@@ -38,9 +38,12 @@ extends Global_Message
 
 @onready var warning_text = $"Profile Modal/Panel/Warning Text"
 
+@onready var profile_preview = $"Profile Modal/Panel/Profile Preview"
 @onready var in_game_name_input =  $"Profile Modal/Panel/In Game Name Input"
 @onready var description_input =  $"Profile Modal/Panel/Description Input"
 @onready var change_profile_button = $"Profile Modal/Panel/Change Profile Button"
+@onready var fileDialog_panel = $"Profile Modal/File Panel"
+@onready var fileDialog = $"Profile Modal/File Panel/FileDialog"
 
 @onready var edit_profile_button = $"Profile Modal/Panel/Edit Button"
 @onready var cancel_edit_profile_button = $"Profile Modal/Panel/Cancel Edit Button"
@@ -50,6 +53,8 @@ extends Global_Message
 var prev_count = ""
 var prev_coordinates = Vector2.ZERO
 var prev_diamond = 0
+
+var profile_base64: String
 
 #for components classes
 var player_profile_class = PlayerProfile.new()
@@ -81,14 +86,19 @@ func _ready() -> void:
 	description_input.visible = false
 	warning_text.visible = false
 	
+	#for profile picture inputs
+	fileDialog_panel.visible = false
+	fileDialog.visible = false
+	fileDialog.filters = ["*.png", "*.jpg", "*.jpeg"]
+	
 	save_edit_profile_button.visible = false
 	cancel_edit_profile_button.visible = false
 	edit_profile_button.visible = true
 	change_profile_button.visible = false
 	
-	change_profile_button.connect("pressed", func(): print("test"))
-	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button))
-	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button))
+	change_profile_button.connect("pressed", open_file_Dialog)
+	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
+	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
 		
 	var data = await player_profile_class.get_player_data(http_request)
@@ -109,10 +119,6 @@ func _ready() -> void:
 	
 	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
-	
-	#set the player online
-	await get_tree().create_timer(1.0).timeout
-	await ServerFetch.send_post_request(ServerFetch.backend_url + "accountRoute/setOnline", { "username": PlayerGlobalScript.player_username })
 		
 func going_off_world():
 	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
@@ -126,6 +132,10 @@ func going_off_world():
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)
+	
+func open_file_Dialog():
+	fileDialog.visible = true
+	fileDialog_panel.visible = true
 	
 func save_profile_edit():
 	var regex = RegEx.new()
@@ -169,7 +179,7 @@ func save_profile_edit():
 			PlayerGlobalScript.player_in_game_name = result["inGameName"]
 			player_profile_class.description_profile = result["description"]
 			
-			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button)
+			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view)
 			
 			SocketClient.send_data({
 				"Socket_Name": "ModifyProfile",
@@ -294,6 +304,7 @@ func _on_http_request_request_completed(_result: int, response_code: int, _heade
 			var texture = ImageTexture.create_from_image(image)
 			player_profile.texture = texture
 			player_profile_view.texture = texture
+			profile_preview.texture = texture
 		else:
 			print("Failed to load image from buffer:", err)
 	else:
@@ -303,3 +314,26 @@ func _on_guest_animation_player_animation_finished(anim_name: StringName) -> voi
 	if anim_name == "pop":
 		if PlayerGlobalScript.isModalOpen == false:
 			guest_connect_account_panel.visible = false
+
+func _on_file_dialog_file_selected(path: String) -> void:
+	var image = Image.new()
+	var error = image.load(path)
+	
+	if error == OK:
+		var texture = ImageTexture.create_from_image(image)
+		profile_preview.texture = texture
+		
+		var byte_array = image.save_png_to_buffer()
+		var base64_string = Marshalls.raw_to_base64(byte_array)
+
+		profile_base64 = base64_string
+		print("Base64 image for Imgur:\n", profile_base64)
+	else:
+		push_error("Failed to load image.")
+
+
+func _on_file_dialog_canceled() -> void:
+	fileDialog_panel.visible = false
+
+func _on_file_dialog_confirmed() -> void:
+	fileDialog_panel.visible = false
