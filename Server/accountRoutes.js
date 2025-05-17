@@ -6,6 +6,10 @@ const sanitize = require("sanitize-html");
 const bcrypt = require("bcryptjs")
 const { v4: uuidv4 } = require('uuid');
 
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+require("dotenv").config({ path: require("path").resolve(__dirname, "../keys.env")})
+
 async function setOnline(username){
     try{
         await accountModel.findOneAndUpdate({ username: username }, { $set: { isOnline: true }}, { new: true })
@@ -46,6 +50,28 @@ route.post("/validateAccount", async (req, res)=>{
         console.log(err);
     }
 });
+
+async function delete_image(profile_hash){
+    try{
+        if(profile_hash != "ajVzRmV"){
+            const deleteImg = await fetch(`https://api.imgur.com/3/image/${profile_hash}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${process.env.IMGUR_ACCESS_TOKEN}`
+                }
+            });
+
+            const deleteImg_res = await deleteImg.json();
+
+            if(!deleteImg_res.success){
+                console.log(deleteImg_res)
+            }
+        }
+    }
+    catch(err){
+        console.log(err);
+    }
+}
 
 function hash_pass(pass){
     const salt = bcrypt.genSaltSync(10);
@@ -109,7 +135,7 @@ route.post("/createAccount", async (req, res) =>{
         else{
             await accountModel.create({ username: sanitize(req.body.username), password: hash_pass(sanitize(req.body.password)), account_type: "Player", login_token: uuidv4(), isOnline: true });
            
-            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
+            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet", profile_hash: "ajVzRmV" })
             status = "Success";
         }
         res.status(200).json({ status: status })
@@ -145,7 +171,7 @@ route.post("/createGuestAccount", async (req, res)=>{
             login_token = createAcc.login_token;
             player_account_type = createAcc.account_type;
 
-            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet" })
+            await playerInfoModel.create({ username: sanitize(req.body.username), inGameName: inGameName[Math.floor(Math.random() * inGameName.length)], diamond: 1000, profile: "https://i.imgur.com/ajVzRmV.png", description: "No description yet", profile_hash: "ajVzRmV" })
         }
         res.status(200).json({ status: status, username: username, login_token: login_token, player_type: player_account_type })
     }
@@ -199,6 +225,7 @@ route.post("/auth_auto_login", async (req, res)=>{
             const findPlayerInfo = await playerInfoModel.findOne({ username: req.body.username })
 
             if(findUser && findUser.account_type == "Guest" && findPlayerInfo){
+                await delete_image(findPlayerInfo.profile_hash);
                 await accountModel.findOneAndDelete({ username: findUser.username });
                 await playerInfoModel.findOneAndDelete({ username: findPlayerInfo.username })
                 status = "Modified account on guest side, deleting....";

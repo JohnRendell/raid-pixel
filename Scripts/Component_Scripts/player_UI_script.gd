@@ -171,13 +171,21 @@ func save_profile_edit():
 	else:
 		warning_text.visible = false
 		
-		var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "playerInformation/modifyPlayerData", { "username": PlayerGlobalScript.player_username, "inGameName": in_game_name_input.text, "description": description_input.text })
+		var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "playerInformation/modifyPlayerData", { "username": PlayerGlobalScript.player_username, "inGameName": in_game_name_input.text, "description": description_input.text, "profile": profile_base64 })
 		
 		if result.has("status") and result["status"] == "Success":
 			validation_modal.visible = false
 			
 			PlayerGlobalScript.player_in_game_name = result["inGameName"]
 			player_profile_class.description_profile = result["description"]
+			
+			if result["profile"]:
+				PlayerGlobalScript.player_profile = result["profile"]
+				
+				var url = PlayerGlobalScript.player_profile
+				http_request.request(url)
+			
+			profile_base64 = ""
 			
 			player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view)
 			
@@ -327,7 +335,6 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		var base64_string = Marshalls.raw_to_base64(byte_array)
 
 		profile_base64 = base64_string
-		print("Base64 image for Imgur:\n", profile_base64)
 	else:
 		push_error("Failed to load image.")
 

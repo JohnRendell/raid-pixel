@@ -17,9 +17,12 @@ func _ready() -> void:
 	sprite_anim.play("Connecting_Anim")
 	retry_button.visible = false
 	
-	retry_button.connect("button_down", WebsocketsConnection.retry_connection)
+	retry_button.connect("button_down", retry_socket)
 	
-	_on_animation_player_animation_finished("Disconnected_Anim")
+func retry_socket():
+	PlayerGlobalScript.current_modal_open = false
+	PlayerGlobalScript.isModalOpen = false
+	WebsocketsConnection.retry_connection()
 	
 func _process(_delta: float) -> void:
 	var socket_status = WebsocketsConnection.socket_connection_status
