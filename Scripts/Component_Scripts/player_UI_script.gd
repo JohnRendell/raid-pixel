@@ -10,6 +10,7 @@ extends Global_Message
 @onready var http_request = $"HTTPRequest"
 @onready var off_world_button = $"Off World button"
 @onready var current_player_scene_button = $"Show Players button"
+@onready var go_back_to_base_button = $"Go to Base button"
 
 #setting modal contents
 @onready var logout_btn = $"Setting Modal/Panel/Log out Button"
@@ -100,25 +101,29 @@ func _ready() -> void:
 	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
+	
+	#for button and other stuff
+	await get_tree().process_frame
+	var current_scene = PlayerGlobalScript.current_scene
+	off_world_button.focus_mode = Control.FOCUS_NONE
+	off_world_button.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
+	off_world_button.connect("pressed", going_off_world)
+	
+	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
+	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
+	
+	go_back_to_base_button.visible = false if not current_scene.to_upper() == "PLAYER_BASE" else true
+	go_back_to_base_button.connect("pressed", going_back_to_base)
+	
+	logout_btn.connect("pressed", log_out_action)
 		
 	var data = await player_profile_class.get_player_data(http_request)
 	if data["status"] == "Finished":
 		in_game_name_input.text = data["inGameName"]
 		description_input.text = data["description"]
 		
-		logout_btn.connect("pressed", log_out_action)
-		
 		var count = await game_data_class.get_player_count()
 		playerCount.text = "Active player/s: %s" % [count]
-		
-	#for button and other stuff
-	var current_scene = PlayerGlobalScript.current_scene
-	off_world_button.focus_mode = Control.FOCUS_NONE
-	off_world_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
-	off_world_button.connect("pressed", going_off_world)
-	
-	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
-	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" else true
 		
 func going_off_world():
 	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
@@ -129,6 +134,11 @@ func going_off_world():
 		
 		loading_modal.visible = true
 		loading_modal.load("res://Scenes/map_scene.tscn")
+		
+func going_back_to_base():
+	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
+		loading_modal.visible = true
+		loading_modal.load("res://Scenes/player_base_scene_space.tscn")
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)

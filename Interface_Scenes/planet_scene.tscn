@@ -1,14 +1,60 @@
 [gd_scene load_steps=14 format=4 uid="uid://bs0rmjac2s33w"]
 
 [ext_resource type="Shader" uid="uid://dhwsn1yqhm5rh" path="res://Assets/Shader/highlight.gdshader" id="1_6ik15"]
-[ext_resource type="Script" uid="uid://dd2kpusbubapo" path="res://Scripts/Component_Scripts/planet_scene_script.gd" id="2_6ik15"]
-[ext_resource type="Texture2D" uid="uid://4q1pxs6d5d4g" path="res://icon.svg" id="2_8c564"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="4_hwh2e"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8c564"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ik15"]
 shader = ExtResource("1_6ik15")
 shader_parameter/line_color = Color(1, 1, 0, 1)
 shader_parameter/line_thickness = 5.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8c564"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
+[sub_resource type="GDScript" id="GDScript_hwh2e"]
+script/source = "extends Control
+
+@onready var planet_button = $\".\"
+@onready var shader_mat = planet_button.material
+
+@export var loading_modal: Control
+@export var scene_path: String
+@export var tool_tip: String
+@export var title: String
+@export var description: String
+
+@onready var panel_info = $\"Panel\"
+@onready var scene_title = $\"Panel/Scene title\"
+@onready var scene_description = $\"Panel/Description\"
+
+func _ready() -> void:
+	panel_info.visible = false
+	scene_title.text = title
+	scene_description.text = description
+	planet_button.tooltip_text = tool_tip
+	
+	loading_modal.visible = false
+	shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+	
+	planet_button.connect(\"pressed\", planet_click)
+	planet_button.connect(\"mouse_entered\", planet_hover_in)
+	planet_button.connect(\"mouse_exited\", planet_hover_out)
+	
+func planet_click():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		loading_modal.visible = true
+		loading_modal.load(scene_path)
+
+func planet_hover_in():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = true
+		shader_mat.set_shader_parameter(\"line_thickness\", 5.0)
+
+func planet_hover_out():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = false
+		shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8c564"]
 bg_color = Color(1, 1, 1, 1)
@@ -1158,13 +1204,13 @@ cache/0/50/0/glyphs/141/uv_rect = Rect2(188, 1, 26, 35)
 cache/0/50/0/glyphs/141/texture_idx = 0
 
 [node name="planet_scene" type="TextureButton"]
-material = SubResource("ShaderMaterial_8c564")
+material = SubResource("ShaderMaterial_6ik15")
 offset_right = 400.0
 offset_bottom = 400.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("2_8c564")
+texture_normal = SubResource("CompressedTexture2D_8c564")
 ignore_texture_size = true
-script = ExtResource("2_6ik15")
+script = SubResource("GDScript_hwh2e")
 
 [node name="Panel" type="Panel" parent="."]
 top_level = true

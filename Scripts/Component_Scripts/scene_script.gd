@@ -32,18 +32,19 @@ func _ready() -> void:
 		scene_particle.emitting = true
 	
 	#convert tile map layer into local world
-	var tile_size = tileMap.tile_set.tile_size
-	var used_rect = tileMap.get_used_rect()
-	
-	world_rect = Rect2(
-		tileMap.map_to_local(used_rect.position),
-		used_rect.size * tile_size
-	)
-	
-	max_scene_width_left = world_rect.position.x + world_rect.size.x
-	max_scene_width_right = world_rect.position.x
-	max_scene_height_bottom = world_rect.position.y + world_rect.size.y
-	max_scene_height_top = world_rect.position.y
+	if tileMap and tileMap.tile_set:
+		var tile_size = tileMap.tile_set.tile_size
+		var used_rect = tileMap.get_used_rect()
+		
+		world_rect = Rect2(
+			tileMap.map_to_local(used_rect.position),
+			used_rect.size * tile_size
+		)
+		
+		max_scene_width_left = world_rect.position.x + world_rect.size.x
+		max_scene_width_right = world_rect.position.x
+		max_scene_height_bottom = world_rect.position.y + world_rect.size.y
+		max_scene_height_top = world_rect.position.y
 	
 	await get_tree().create_timer(1.0).timeout
 	var get_time = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
@@ -71,8 +72,10 @@ func day_night_cycle(delta):
 		prev_time = time
 	
 func _process(delta: float):
-	wrap_around()
-	adjust_player_camera_limit()
+	if tileMap and tileMap.tile_set:
+		wrap_around()
+		adjust_player_camera_limit()
+	
 	day_night_cycle(delta)
 	
 func adjust_player_camera_limit():

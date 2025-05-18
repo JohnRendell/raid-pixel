@@ -17,7 +17,6 @@ func _ready() -> void:
 	panel_info.visible = false
 	scene_title.text = title
 	scene_description.text = description
-	
 	planet_button.tooltip_text = tool_tip
 	
 	loading_modal.visible = false
