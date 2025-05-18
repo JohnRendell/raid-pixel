@@ -24,7 +24,7 @@ var player_enemy_asset = preload("res://Assets/UI_Components/Sprite_Health_Enemy
 
 func _ready() -> void:
 	player_health_bar.value = 100
-	player_health_bar.texture_progress = player_enemy_asset if player_type == "enemy" else player_ally_asset
+	player_health_bar.texture_progress = player_enemy_asset if player_type.to_upper() == "ENEMY" else player_ally_asset
 	
 	player_anim.play("front_idle_anim")
 

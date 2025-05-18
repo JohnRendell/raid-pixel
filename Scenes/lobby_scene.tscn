@@ -281,7 +281,6 @@ canvasModulate = NodePath("Background")
 night_color = Color(0.0313726, 0.0313726, 0.0313726, 1)
 day_color = Color(1, 1, 1, 1)
 time_render = NodePath("UI/Time")
-scene_player_type = "enemy"
 
 [node name="Background" type="CanvasModulate" parent="."]
 z_index = 6

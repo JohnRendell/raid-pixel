@@ -15,7 +15,9 @@ var prev_coordinates = Vector2.ZERO
 func _ready() -> void:
 	player_health_bar.value = 100
 	player_anim.play("front_idle_anim")
-
+	
+	await get_tree().process_frame
+	PlayerGlobalScript.player_type = "Ally" if PlayerGlobalScript.current_scene.to_upper() == "LOBBY" else "Enemy"
 		
 func play_punch_animation():
 	if isRight or isLeft:

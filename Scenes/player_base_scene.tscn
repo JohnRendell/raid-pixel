@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://boufntno4axnd"]
+
+[ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="1_0weng"]
+[ext_resource type="PackedScene" uid="uid://c3orji6prrgwp" path="res://Sprite_Nodes/main_player.tscn" id="2_lh5p8"]
+[ext_resource type="PackedScene" uid="uid://d3fy2yoewjeff" path="res://Sprite_Nodes/spawner_obj.tscn" id="3_8y75g"]
+
+[node name="player_base_scene" type="Node2D"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Player UI" parent="UI" instance=ExtResource("1_0weng")]
+
+[node name="Y sort" type="Control" parent="."]
+z_index = 1
+y_sort_enabled = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Main Player" parent="Y sort" instance=ExtResource("2_lh5p8")]
+position = Vector2(734, 540)
+
+[node name="Spawner Body" parent="Y sort" instance=ExtResource("3_8y75g")]
+position = Vector2(869, 548)

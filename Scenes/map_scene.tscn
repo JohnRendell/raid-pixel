@@ -1,14 +1,120 @@
-[gd_scene load_steps=10 format=3 uid="uid://crjpppc78kvxv"]
+[gd_scene load_steps=14 format=3 uid="uid://crjpppc78kvxv"]
 
 [ext_resource type="Script" uid="uid://cxoilqi33no63" path="res://Scripts/Map_Scripts/map_scene_script.gd" id="1_d3vki"]
 [ext_resource type="Texture2D" uid="uid://3d2ibps4sk1y" path="res://Assets/Background_Images/Space_Background.png" id="1_ppkpg"]
 [ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="2_wsgkf"]
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="3_74t0d"]
-[ext_resource type="Texture2D" uid="uid://ytdahw2kkbcn" path="res://Assets/Sprite_Static/Planets/lobby_planet.png" id="4_lkmvg"]
-[ext_resource type="Texture2D" uid="uid://bxn1t08f5se5g" path="res://Assets/Sprite_Static/Planets/Star.png" id="4_nylon"]
-[ext_resource type="Texture2D" uid="uid://c3qbfl12je6t0" path="res://Assets/Textures/Light Texture.png" id="5_tqesh"]
+[ext_resource type="Shader" uid="uid://dhwsn1yqhm5rh" path="res://Assets/Shader/highlight.gdshader" id="7_nf5oo"]
 [ext_resource type="PackedScene" uid="uid://bs0rmjac2s33w" path="res://Interface_Scenes/planet_scene.tscn" id="8_d3vki"]
 [ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_lig3r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2nhsl"]
+shader = ExtResource("7_nf5oo")
+shader_parameter/line_color = Color(1, 1, 0, 1)
+shader_parameter/line_thickness = 5.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d3vki"]
+load_path = "res://.godot/imported/lobby_planet.png-612af67575a33448dbbe13f3350552d4.ctex"
+
+[sub_resource type="GDScript" id="GDScript_lig3r"]
+script/source = "extends Control
+
+@onready var planet_button = $\".\"
+@onready var shader_mat = planet_button.material
+
+@export var loading_modal: Control
+@export var scene_path: String
+@export var tool_tip: String
+@export var title: String
+@export var description: String
+
+@onready var panel_info = $\"Panel\"
+@onready var scene_title = $\"Panel/Scene title\"
+@onready var scene_description = $\"Panel/Description\"
+
+func _ready() -> void:
+	panel_info.visible = false
+	scene_title.text = title
+	scene_description.text = description
+	
+	planet_button.tooltip_text = tool_tip
+	
+	loading_modal.visible = false
+	shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+	
+	planet_button.connect(\"pressed\", planet_click)
+	planet_button.connect(\"mouse_entered\", planet_hover_in)
+	planet_button.connect(\"mouse_exited\", planet_hover_out)
+	
+func planet_click():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		loading_modal.visible = true
+		loading_modal.load(scene_path)
+
+func planet_hover_in():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = true
+		shader_mat.set_shader_parameter(\"line_thickness\", 5.0)
+
+func planet_hover_out():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = false
+		shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i02im"]
+shader = ExtResource("7_nf5oo")
+shader_parameter/line_color = Color(1, 1, 0, 1)
+shader_parameter/line_thickness = 5.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ssp6g"]
+load_path = "res://.godot/imported/Solar_Sys_Player_Base.png-57346f07e8dfe5b8869d8032dccdafcd.ctex"
+
+[sub_resource type="GDScript" id="GDScript_hg2b3"]
+script/source = "extends Control
+
+@onready var planet_button = $\".\"
+@onready var shader_mat = planet_button.material
+
+@export var loading_modal: Control
+@export var scene_path: String
+@export var tool_tip: String
+@export var title: String
+@export var description: String
+
+@onready var panel_info = $\"Panel\"
+@onready var scene_title = $\"Panel/Scene title\"
+@onready var scene_description = $\"Panel/Description\"
+
+func _ready() -> void:
+	panel_info.visible = false
+	scene_title.text = title
+	scene_description.text = description
+	
+	planet_button.tooltip_text = tool_tip
+	
+	loading_modal.visible = false
+	shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+	
+	planet_button.connect(\"pressed\", planet_click)
+	planet_button.connect(\"mouse_entered\", planet_hover_in)
+	planet_button.connect(\"mouse_exited\", planet_hover_out)
+	
+func planet_click():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		loading_modal.visible = true
+		loading_modal.load(scene_path)
+
+func planet_hover_in():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = true
+		shader_mat.set_shader_parameter(\"line_thickness\", 5.0)
+
+func planet_hover_out():
+	if PlayerGlobalScript.isModalOpen == false and PlayerGlobalScript.current_modal_open == false:
+		panel_info.visible = false
+		shader_mat.set_shader_parameter(\"line_thickness\", 0.0)
+"
 
 [node name="map_scene" type="Node2D"]
 script = ExtResource("1_d3vki")
@@ -26,14 +132,6 @@ grow_vertical = 2
 texture = ExtResource("1_ppkpg")
 expand_mode = 1
 
-[node name="Star" type="Sprite2D" parent="."]
-position = Vector2(-8, 917)
-texture = ExtResource("4_nylon")
-
-[node name="PointLight2D" type="PointLight2D" parent="Star"]
-energy = 16.0
-texture = ExtResource("5_tqesh")
-
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 2
 
@@ -43,22 +141,38 @@ offset_top = -5.0
 offset_right = 2.0
 offset_bottom = -5.0
 
-[node name="planet_scene" parent="UI" node_paths=PackedStringArray("loading_modal") instance=ExtResource("8_d3vki")]
-offset_left = 769.0
-offset_top = 762.0
-offset_right = 1169.0
-offset_bottom = 1162.0
-scale = Vector2(0.5, 0.5)
-mouse_filter = 1
-texture_normal = ExtResource("4_lkmvg")
-loading_modal = NodePath("../Loading Interface")
-scene_path = "res://Scenes/lobby_scene.tscn"
-tool_tip = "Go to lobby"
-title = "Lobby"
-description = "Lobby for all player's globally."
-
 [node name="Connection_Interface" parent="UI" instance=ExtResource("3_74t0d")]
 visible = false
 
 [node name="Loading Interface" parent="UI" instance=ExtResource("10_lig3r")]
 visible = false
+
+[node name="Lobby Scene" parent="UI" node_paths=PackedStringArray("loading_modal") instance=ExtResource("8_d3vki")]
+material = SubResource("ShaderMaterial_2nhsl")
+offset_left = 85.0
+offset_top = 755.0
+offset_right = 485.0
+offset_bottom = 1155.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 1
+texture_normal = SubResource("CompressedTexture2D_d3vki")
+script = SubResource("GDScript_lig3r")
+loading_modal = NodePath("../Loading Interface")
+scene_path = "res://Scenes/lobby_scene.tscn"
+tool_tip = "Go to Lobby Scene"
+title = "Lobby Scene"
+description = "This is all players will go."
+
+[node name="Base Scene" parent="UI" node_paths=PackedStringArray("loading_modal") instance=ExtResource("8_d3vki")]
+material = SubResource("ShaderMaterial_i02im")
+offset_left = 605.0
+offset_top = 193.0
+offset_right = 1005.0
+offset_bottom = 593.0
+texture_normal = SubResource("CompressedTexture2D_ssp6g")
+script = SubResource("GDScript_hg2b3")
+loading_modal = NodePath("../Loading Interface")
+scene_path = "res://Scenes/player_base_scene.tscn"
+tool_tip = "Go to your base"
+title = "Player Base"
+description = "This is Player Base"
