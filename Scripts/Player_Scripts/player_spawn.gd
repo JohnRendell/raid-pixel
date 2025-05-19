@@ -51,7 +51,7 @@ func _process(_delta: float) -> void:
 					joined_player.player_type = data.get("player_type")
 					joined_player.isAttacking = data.get("isAttacking")
 				
-		elif data.get("Socket_Name") and prev_data != data and (data.get("Socket_Name") == "Player_Disconnect" or data.get("Socket_Name") == "going_offWorld"):
+		elif data.get("Socket_Name") and prev_data != data and (data.get("Socket_Name") == "Player_Disconnect" or data.get("Socket_Name") == "leave_lobby"):
 			prev_data = data
 
 			if data.has("Player_GameID") and stored_players.has(data.get("Player_GameID")):

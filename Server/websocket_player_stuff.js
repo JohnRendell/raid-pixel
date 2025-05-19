@@ -43,8 +43,8 @@ module.exports = (wss)=>{
                 )
             }
 
-            //for playing going to off world
-            else if(socket_name === "going_offWorld"){
+            //for playing leave lobby
+            else if(socket_name === "leave_lobby"){
                 broadcastSocket(
                     wss,
                     {

@@ -8,9 +8,8 @@ extends Global_Message
 @onready var diamond_count_label = $"Diamond Panel/Diamond Count"
 @onready var player_profile = $"Profile"
 @onready var http_request = $"HTTPRequest"
-@onready var off_world_button = $"Off World button"
+@onready var explore_button = $"Explore button"
 @onready var current_player_scene_button = $"Show Players button"
-@onready var go_back_to_base_button = $"Go to Base button"
 
 #setting modal contents
 @onready var logout_btn = $"Setting Modal/Panel/Log out Button"
@@ -105,15 +104,12 @@ func _ready() -> void:
 	#for button and other stuff
 	await get_tree().process_frame
 	var current_scene = PlayerGlobalScript.current_scene
-	off_world_button.focus_mode = Control.FOCUS_NONE
-	off_world_button.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
-	off_world_button.connect("pressed", going_off_world)
+	explore_button.focus_mode = Control.FOCUS_NONE
+	explore_button.visible = false if current_scene.to_upper() == "MAP SCENE" else true
+	explore_button.connect("pressed", leave_lobby_scene)
 	
-	coordinate_label.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
-	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP_SCENE" or current_scene.to_upper() == "MAP_SCENE_BASE" else true
-	
-	go_back_to_base_button.visible = false if not current_scene.to_upper() == "PLAYER_BASE" else true
-	go_back_to_base_button.connect("pressed", going_back_to_base)
+	coordinate_label.visible = false if current_scene.to_upper() == "MAP SCENE" else true
+	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP SCENE" else true
 	
 	logout_btn.connect("pressed", log_out_action)
 		
@@ -125,20 +121,15 @@ func _ready() -> void:
 		var count = await game_data_class.get_player_count()
 		playerCount.text = "Active player/s: %s" % [count]
 		
-func going_off_world():
+func leave_lobby_scene():
 	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
 		SocketClient.send_data({
-			"Socket_Name": "going_offWorld",
+			"Socket_Name": "leave_lobby",
 			"Player_GameID": PlayerGlobalScript.player_game_id
 		})
 		
 		loading_modal.visible = true
 		loading_modal.load("res://Scenes/map_scene.tscn")
-		
-func going_back_to_base():
-	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
-		loading_modal.visible = true
-		loading_modal.load("res://Scenes/player_base_scene_space.tscn")
 		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)

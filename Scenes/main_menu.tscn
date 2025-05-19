@@ -408,6 +408,7 @@ theme_override_colors/font_hover_pressed_color = Color(0, 0, 1, 1)
 theme_override_fonts/font = ExtResource("3_1ehe0")
 theme_override_font_sizes/font_size = 20
 text = "Create Account"
+uri = "http://localhost:8080/"
 
 [node name="username label" type="RichTextLabel" parent="CanvasLayer/Log in Modal/Panel"]
 custom_minimum_size = Vector2(300, 20)

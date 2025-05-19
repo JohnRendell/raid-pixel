@@ -72,7 +72,7 @@ func day_night_cycle(delta):
 		prev_time = time
 	
 func _process(delta: float):
-	if tileMap and tileMap.tile_set:
+	if tileMap and tileMap.tile_set and main_player:
 		wrap_around()
 		adjust_player_camera_limit()
 	
