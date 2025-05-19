@@ -24,9 +24,13 @@ var path: String
 ## Actual progress value; we move towards towards this
 var progress_value := 0.0
 
+func _ready() -> void:
+	$".".visible = false
+
 ## Load the scene at the given path.
 ## When this is finished loading, the "scene_loaded" signal will be emitted.
 func load(path_to_load: String):
+	$".".visible = true
 	path = path_to_load
 	ResourceLoader.load_threaded_request(path)
 	

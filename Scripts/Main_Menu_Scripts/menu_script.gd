@@ -27,7 +27,6 @@ func _ready() -> void:
 	warning_text.text = ""
 	session_modal.visible = false
 	validation_modal.visible = false
-	loading_modal.visible = false
 	online_warn.visible = false
 	
 	guest_proceed_btn.connect("pressed", login_as_guest)
@@ -56,7 +55,6 @@ func login_as_guest():
 		PlayerGlobalScript.isModalOpen = false
 		PlayerGlobalScript.current_modal_open = false
 		
-		loading_modal.visible = true
 		loading_modal.load("res://Scenes/lobby_scene.tscn")
 	else:
 		validation_modal.visible = false
@@ -96,7 +94,6 @@ func proceed_login():
 		
 		if account_validate_result["status"] == "Account found":
 			if not account_validate_result["isOnline"]:
-				loading_modal.visible = true
 				PlayerGlobalScript.player_account_type = account_validate_result["player_type"]
 				PlayerGlobalScript.player_UUID = account_validate_result["login_token"]
 				PlayerGlobalScript.player_username = account_validate_result["username"]
@@ -143,7 +140,6 @@ func auto_login():
 						PlayerGlobalScript.isModalOpen = false
 						PlayerGlobalScript.current_modal_open = false
 					
-						loading_modal.visible = true
 						loading_modal.load("res://Scenes/lobby_scene.tscn")
 					else:
 						online_warn.visible = true

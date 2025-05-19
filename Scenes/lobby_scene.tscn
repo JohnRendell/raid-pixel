@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://dn723fb516qkt"]
+[gd_scene load_steps=20 format=4 uid="uid://dn723fb516qkt"]
 
 [ext_resource type="Script" uid="uid://cw2r6de5l2y5o" path="res://Scripts/Component_Scripts/scene_script.gd" id="1_3q4fp"]
 [ext_resource type="Texture2D" uid="uid://dyo4boekykil" path="res://Assets/Tile_Maps/Grass_Terrain.png" id="2_ljcoi"]
@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://j2gs4epopky2" path="res://Assets/Particle_Textures/Leaves_particle.png" id="5_3q4fp"]
 [ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="5_44aa0"]
 [ext_resource type="PackedScene" uid="uid://eqlhfnfo2dgy" path="res://Sprite_Nodes/default_tree.tscn" id="5_nr3av"]
+[ext_resource type="Script" uid="uid://duoppo2u6sqpc" path="res://Scripts/Component_Scripts/player_door_script.gd" id="6_h23dp"]
+[ext_resource type="Texture2D" uid="uid://bdqk3x1hjfykg" path="res://Assets/Sprite_Animations/Player_vs_door_anim.png" id="6_s7ahk"]
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="7_lvc8g"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="8_r1is2"]
+[ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_s7ahk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_op75h"]
 texture = ExtResource("2_ljcoi")
@@ -270,6 +273,48 @@ texture = ExtResource("2_ljcoi")
 [sub_resource type="TileSet" id="TileSet_7hemx"]
 sources/0 = SubResource("TileSetAtlasSource_op75h")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h23dp"]
+size = Vector2(186, 136)
+
+[sub_resource type="Animation" id="Animation_s7ahk"]
+resource_name = "door_anim"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_h23dp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h23dp"]
+_data = {
+&"RESET": SubResource("Animation_h23dp"),
+&"door_anim": SubResource("Animation_s7ahk")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s7ahk"]
+size = Vector2(185, 8)
+
 [node name="Lobby Scene" type="Node2D" node_paths=PackedStringArray("scene_particle", "main_player", "ySort", "tileMap", "canvasModulate", "time_render")]
 script = ExtResource("1_3q4fp")
 scene_particle = NodePath("Leaves Particle")
@@ -339,6 +384,35 @@ position = Vector2(4311, -221)
 [node name="Tree11" parent="Y Sort" instance=ExtResource("5_nr3av")]
 position = Vector2(1417, -1190)
 
+[node name="Player Door Area" type="Area2D" parent="Y Sort"]
+position = Vector2(3073, -217)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y Sort/Player Door Area"]
+shape = SubResource("RectangleShape2D_h23dp")
+
+[node name="Player Door" type="StaticBody2D" parent="Y Sort" node_paths=PackedStringArray("player")]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(3073, -168)
+script = ExtResource("6_h23dp")
+player = NodePath("../Main Player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Y Sort/Player Door"]
+texture = ExtResource("6_s7ahk")
+offset = Vector2(0, -150)
+hframes = 2
+vframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Y Sort/Player Door/Sprite2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_h23dp")
+}
+speed_scale = 3.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y Sort/Player Door"]
+shape = SubResource("RectangleShape2D_s7ahk")
+disabled = true
+
 [node name="Leaves Particle" type="CPUParticles2D" parent="."]
 z_index = 5
 position = Vector2(2321, -305)
@@ -373,3 +447,9 @@ text = "Time: Fetching"
 fit_content = true
 scroll_active = false
 vertical_alignment = 1
+
+[node name="Loading Interface" parent="UI" instance=ExtResource("10_s7ahk")]
+
+[connection signal="body_entered" from="Y Sort/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_body_entered"]
+[connection signal="body_exited" from="Y Sort/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_body_exited"]
+[connection signal="animation_finished" from="Y Sort/Player Door/Sprite2D/AnimationPlayer" to="Y Sort/Player Door" method="_on_animation_player_animation_finished"]

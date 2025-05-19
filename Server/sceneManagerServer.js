@@ -2,8 +2,7 @@ const sceneModel = require("./sceneMongooseSchema");
 
 //scenes
 let scenes = [
-    { scene_name: "lobby", max_time: 300 },
-    { scene_name: "Map Scene", max_time: 20 }
+    { scene_name: "lobby", max_time: 300 }
 ]
 
 async function initializeScene(){

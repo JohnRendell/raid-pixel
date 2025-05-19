@@ -8,7 +8,6 @@ extends Global_Message
 @onready var diamond_count_label = $"Diamond Panel/Diamond Count"
 @onready var player_profile = $"Profile"
 @onready var http_request = $"HTTPRequest"
-@onready var explore_button = $"Explore button"
 @onready var current_player_scene_button = $"Show Players button"
 
 #setting modal contents
@@ -100,16 +99,6 @@ func _ready() -> void:
 	cancel_edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(false, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
-	
-	#for button and other stuff
-	await get_tree().process_frame
-	var current_scene = PlayerGlobalScript.current_scene
-	explore_button.focus_mode = Control.FOCUS_NONE
-	explore_button.visible = false if current_scene.to_upper() == "MAP SCENE" else true
-	explore_button.connect("pressed", leave_lobby_scene)
-	
-	coordinate_label.visible = false if current_scene.to_upper() == "MAP SCENE" else true
-	current_player_scene_button.visible = false if current_scene.to_upper() == "MAP SCENE" else true
 	
 	logout_btn.connect("pressed", log_out_action)
 		
