@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://d21kxxttmlvfc"]
+[gd_scene load_steps=20 format=3 uid="uid://d21kxxttmlvfc"]
 
 [ext_resource type="Script" uid="uid://h2r2qor8irl2" path="res://Scripts/Player_Scripts/joined_player_script.gd" id="1_5tsll"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="2_6sl8t"]
@@ -186,6 +186,9 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uvyih"]
 size = Vector2(36.25, 12.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_so65a"]
+size = Vector2(68.75, 162.5)
+
 [node name="Joined Player" type="CharacterBody2D"]
 z_index = 1
 scale = Vector2(0.8, 0.8)
@@ -272,3 +275,10 @@ speed_scale = 3.0
 position = Vector2(-1.875, 6.25)
 shape = SubResource("RectangleShape2D_uvyih")
 disabled = true
+
+[node name="Player Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player Area"]
+position = Vector2(-1.875, -68.75)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_so65a")

@@ -110,16 +110,6 @@ func _ready() -> void:
 		var count = await game_data_class.get_player_count()
 		playerCount.text = "Active player/s: %s" % [count]
 		
-func leave_lobby_scene():
-	if not PlayerGlobalScript.current_modal_open and not PlayerGlobalScript.isModalOpen:
-		SocketClient.send_data({
-			"Socket_Name": "leave_lobby",
-			"Player_GameID": PlayerGlobalScript.player_game_id
-		})
-		
-		loading_modal.visible = true
-		loading_modal.load("res://Scenes/map_scene.tscn")
-		
 func log_out_action():
 	game_data_class.player_logout(validation_modal, loading_modal, PlayerGlobalScript.player_game_id, PlayerGlobalScript.player_username)
 	
@@ -327,7 +317,6 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		profile_base64 = base64_string
 	else:
 		push_error("Failed to load image.")
-
 
 func _on_file_dialog_canceled() -> void:
 	fileDialog_panel.visible = false

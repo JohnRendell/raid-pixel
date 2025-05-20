@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c3orji6prrgwp"]
+[gd_scene load_steps=20 format=3 uid="uid://c3orji6prrgwp"]
 
 [ext_resource type="Texture2D" uid="uid://cqxd7vwq076re" path="res://Assets/Sprite_Animations/Default_Character.png" id="1_0obo4"]
 [ext_resource type="Script" uid="uid://edsrc6d0vo01" path="res://Scripts/Player_Scripts/player_script.gd" id="1_0vxpe"]
@@ -186,6 +186,9 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0obo4"]
 size = Vector2(36.25, 12.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m7d5h"]
+size = Vector2(72.5, 162.5)
+
 [node name="Main Player" type="CharacterBody2D"]
 z_index = 1
 scale = Vector2(0.8, 0.8)
@@ -275,3 +278,9 @@ disabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 limit_smoothed = true
+
+[node name="Main Player Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Main Player Area"]
+position = Vector2(-3.75, -68.75)
+shape = SubResource("RectangleShape2D_m7d5h")

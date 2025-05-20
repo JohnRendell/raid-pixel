@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://dn723fb516qkt"]
+[gd_scene load_steps=22 format=4 uid="uid://dn723fb516qkt"]
 
 [ext_resource type="Script" uid="uid://cw2r6de5l2y5o" path="res://Scripts/Component_Scripts/scene_script.gd" id="1_3q4fp"]
 [ext_resource type="Texture2D" uid="uid://dyo4boekykil" path="res://Assets/Tile_Maps/Grass_Terrain.png" id="2_ljcoi"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bdqk3x1hjfykg" path="res://Assets/Sprite_Animations/Player_vs_door_anim.png" id="6_s7ahk"]
 [ext_resource type="PackedScene" uid="uid://dno6galxv43l5" path="res://Interface_Scenes/Connection_Interface.tscn" id="7_lvc8g"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="8_r1is2"]
+[ext_resource type="Theme" uid="uid://bk1fa4k76vsuj" path="res://Assets/Theme/Default_Button.tres" id="9_oohhb"]
 [ext_resource type="PackedScene" uid="uid://c8jsdbprfkw5m" path="res://Interface_Scenes/Loading_interface.tscn" id="10_s7ahk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_op75h"]
@@ -273,8 +274,20 @@ texture = ExtResource("2_ljcoi")
 [sub_resource type="TileSet" id="TileSet_7hemx"]
 sources/0 = SubResource("TileSetAtlasSource_op75h")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_h23dp"]
-size = Vector2(186, 136)
+[sub_resource type="Animation" id="Animation_h23dp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_s7ahk"]
 resource_name = "door_anim"
@@ -291,21 +304,6 @@ tracks/0/keys = {
 "values": [0, 1, 2, 3]
 }
 
-[sub_resource type="Animation" id="Animation_h23dp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_h23dp"]
 _data = {
 &"RESET": SubResource("Animation_h23dp"),
@@ -314,6 +312,16 @@ _data = {
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7ahk"]
 size = Vector2(185, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h23dp"]
+size = Vector2(186, 136)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h23dp"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [node name="Lobby Scene" type="Node2D" node_paths=PackedStringArray("scene_particle", "main_player", "ySort", "tileMap", "canvasModulate", "time_render")]
 script = ExtResource("1_3q4fp")
@@ -384,18 +392,14 @@ position = Vector2(4311, -221)
 [node name="Tree11" parent="Y Sort" instance=ExtResource("5_nr3av")]
 position = Vector2(1417, -1190)
 
-[node name="Player Door Area" type="Area2D" parent="Y Sort"]
-position = Vector2(3073, -217)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Y Sort/Player Door Area"]
-shape = SubResource("RectangleShape2D_h23dp")
-
-[node name="Player Door" type="StaticBody2D" parent="Y Sort" node_paths=PackedStringArray("player")]
+[node name="Player Door" type="StaticBody2D" parent="Y Sort" node_paths=PackedStringArray("loading_modal", "ready_panel", "go_to_scene_button")]
 z_index = 1
 y_sort_enabled = true
 position = Vector2(3073, -168)
 script = ExtResource("6_h23dp")
-player = NodePath("../Main Player")
+loading_modal = NodePath("../../UI/Loading Interface")
+ready_panel = NodePath("../../UI/Going to other scene panel")
+go_to_scene_button = NodePath("../../UI/Going to other scene panel/Enter Button")
 
 [node name="Sprite2D" type="Sprite2D" parent="Y Sort/Player Door"]
 texture = ExtResource("6_s7ahk")
@@ -412,6 +416,12 @@ speed_scale = 3.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Y Sort/Player Door"]
 shape = SubResource("RectangleShape2D_s7ahk")
 disabled = true
+
+[node name="Player Door Area" type="Area2D" parent="Y Sort/Player Door"]
+position = Vector2(0, -49)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y Sort/Player Door/Player Door Area"]
+shape = SubResource("RectangleShape2D_h23dp")
 
 [node name="Leaves Particle" type="CPUParticles2D" parent="."]
 z_index = 5
@@ -448,8 +458,60 @@ fit_content = true
 scroll_active = false
 vertical_alignment = 1
 
+[node name="Going to other scene panel" type="Panel" parent="UI"]
+z_index = 18
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -108.5
+offset_top = 71.0
+offset_right = 108.5
+offset_bottom = 182.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h23dp")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Going to other scene panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -46.0
+offset_right = 150.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("8_r1is2")
+theme_override_font_sizes/normal_font_size = 20
+text = "Enter?"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Enter Button" type="Button" parent="UI/Going to other scene panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -23.5
+offset_top = 3.0
+offset_right = 23.5
+offset_bottom = 43.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("9_oohhb")
+text = "Yes"
+
 [node name="Loading Interface" parent="UI" instance=ExtResource("10_s7ahk")]
 
-[connection signal="body_entered" from="Y Sort/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_body_entered"]
-[connection signal="body_exited" from="Y Sort/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_body_exited"]
 [connection signal="animation_finished" from="Y Sort/Player Door/Sprite2D/AnimationPlayer" to="Y Sort/Player Door" method="_on_animation_player_animation_finished"]
+[connection signal="area_entered" from="Y Sort/Player Door/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_area_entered"]
+[connection signal="area_exited" from="Y Sort/Player Door/Player Door Area" to="Y Sort/Player Door" method="_on_player_door_area_area_exited"]
