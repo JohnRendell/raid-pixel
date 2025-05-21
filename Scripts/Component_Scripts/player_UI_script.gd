@@ -12,6 +12,7 @@ extends Global_Message
 
 #setting modal contents
 @onready var logout_btn = $"Setting Modal/Panel/Log out Button"
+@onready var surrender_btn = $"Setting Modal/Panel/Surrender Button"
 
 #for guest stuff
 @onready var guestAccountButton = $"Guest Account connect button"
@@ -100,7 +101,13 @@ func _ready() -> void:
 	edit_profile_button.connect("pressed", func(): player_profile_class.edit_profile_status(true, in_game_name_input, description_input, cancel_edit_profile_button, save_edit_profile_button, edit_profile_button, player_in_game_name_label, player_description_label, change_profile_button, profile_preview, player_profile_view))
 	save_edit_profile_button.connect("pressed", save_profile_edit)
 	
+	#for setting modal, to check if player is in game.
+	await get_tree().process_frame
+	var current_scene = PlayerGlobalScript.current_scene
+	
 	logout_btn.connect("pressed", log_out_action)
+	logout_btn.visible = current_scene.to_upper() == "LOBBY"
+	surrender_btn.visible = not current_scene.to_upper() == "LOBBY"
 		
 	var data = await player_profile_class.get_player_data(http_request)
 	if data["status"] == "Finished":
