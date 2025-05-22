@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" uid="uid://cw2r6de5l2y5o" path="res://Scripts/Component_Scripts/scene_script.gd" id="1_b6fju"]
 [ext_resource type="PackedScene" uid="uid://1hn556jfmqmu" path="res://Interface_Scenes/Player_ui.tscn" id="1_x87qo"]
-[ext_resource type="Texture2D" uid="uid://b6u0rhkufnovy" path="res://Assets/Tile_Maps/Ship_Body.png" id="2_1ixah"]
 [ext_resource type="PackedScene" uid="uid://c3orji6prrgwp" path="res://Sprite_Nodes/main_player.tscn" id="2_fiftr"]
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="3_6h5vk"]
-[ext_resource type="Texture2D" uid="uid://bt0sopifumn64" path="res://Assets/Tile_Maps/Ship_Front_Back.png" id="3_rgj8m"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fiftr"]
+load_path = "res://.godot/imported/Ship_Body.png-7af7bb5e4e0177d81b93864752d2ce7b.ctex"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ixah"]
-texture = ExtResource("2_1ixah")
+texture = SubResource("CompressedTexture2D_fiftr")
 1:1/0 = 0
 1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:1/0 = 0
@@ -290,8 +291,11 @@ texture = ExtResource("2_1ixah")
 14:15/0 = 0
 14:15/0/z_index = 2
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1ixah"]
+load_path = "res://.godot/imported/Ship_Front_Back.png-1ef4ea588784c1c32787e8e78e999a84.ctex"
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2fmhe"]
-texture = ExtResource("3_rgj8m")
+texture = SubResource("CompressedTexture2D_1ixah")
 1:0/0 = 0
 2:0/0 = 0
 3:0/0 = 0

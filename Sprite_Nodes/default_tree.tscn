@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://eqlhfnfo2dgy"]
-
-[ext_resource type="Texture2D" uid="uid://2e4ars1ic7fr" path="res://Assets/Tile_Maps/Object_Terrain.png" id="1_36nky"]
+[gd_scene load_steps=2 format=3 uid="uid://eqlhfnfo2dgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36nky"]
 size = Vector2(12, 15)
@@ -11,7 +9,6 @@ scale = Vector2(2, 2)
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("1_36nky")
 offset = Vector2(0, -40)
 region_enabled = true
 region_rect = Rect2(12, 8, 52, 92)

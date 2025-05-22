@@ -274,7 +274,6 @@ speed_scale = 3.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1.875, 6.25)
 shape = SubResource("RectangleShape2D_0obo4")
-disabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 limit_smoothed = true
