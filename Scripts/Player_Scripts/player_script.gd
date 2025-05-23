@@ -14,22 +14,23 @@ var prev_coordinates = Vector2.ZERO
 
 func _ready() -> void:
 	player_health_bar.value = 100
-	player_anim.play("front_idle_anim")
+	player_anim.play("side_idle_anim")
 	
 	await get_tree().process_frame
 	PlayerGlobalScript.player_type = "Ally" if PlayerGlobalScript.current_scene.to_upper() == "LOBBY" else "Enemy"
 		
 func play_punch_animation():
-	var dir_value = direction_value
+	var x = last_direction_value.x
+	var y = last_direction_value.y
 	
 	if isAttacking:
-		if abs(dir_value.x) <= -1 or abs(dir_value.x) <= 1:
+		if abs(x) > abs(y):
 			play_anim("side_punch_anim")
 		
-		elif abs(dir_value.y) <= -1:
+		elif y <= -1:
 			play_anim("back_punch_anim")
 		
-		elif abs(dir_value.y) >= 1:
+		elif y >= 1:
 			play_anim("front_punch_anim")
 
 	
@@ -59,9 +60,9 @@ func move_player_animation():
 	var y = dir_value.y
 	
 	if isMoving:
-		if abs(x) > abs(y):
+		if abs(x) > abs(y) or ((x < 0 and y < 0) or (x > 0 and y < 0) or (x < 0 and y > 0) or (x > 0 and y > 0)):
 			play_anim("side_walk_anim")
-			player_sprite.flip_h = x <= -1
+			player_sprite.flip_h = last_direction_value.x < 0
 			
 		elif y <= -1:
 			play_anim("back_walk_anim")
@@ -93,10 +94,9 @@ func send_player_data():
 			"Player_GameID": PlayerGlobalScript.player_game_id,
 			"Player_posX": PlayerGlobalScript.player_pos_X,
 			"Player_posY": PlayerGlobalScript.player_pos_Y,
-			"isLeft": last_direction_value.x <= -1,
-			"isRight": last_direction_value.x >= 1,
-			"isDown": last_direction_value.y >= 1,
-			"isUp": last_direction_value.y <= -1,
+			"direction_value": { "x": direction_value.x, "y": direction_value.y },
+			"last_direction_value": { "x": last_direction_value.x, "y": last_direction_value.y },
+			"isMoving": isMoving,
 			"player_type": PlayerGlobalScript.player_type,
 			"isAttacking": isAttacking
 		}

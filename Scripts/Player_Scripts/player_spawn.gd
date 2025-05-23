@@ -44,10 +44,9 @@ func _process(_delta: float) -> void:
 					var joined_player = joined_player_data["Player"]
 					joined_player.position = Vector2(data.get("Player_posX"), data.get("Player_posY"))
 					joined_player.playerIGN = data.get("Player_inGameName")
-					joined_player.isLeft = data.get("isLeft")
-					joined_player.isRight = data.get("isRight")
-					joined_player.isDown = data.get("isDown")
-					joined_player.isUp = data.get("isUp")
+					joined_player.direction_value = Vector2(data.get("direction_value")["x"], data.get("direction_value")["y"])
+					joined_player.last_direction_value = Vector2(data.get("last_direction_value")["x"], data.get("last_direction_value")["y"])
+					joined_player.isMoving = data.get("isMoving")
 					joined_player.player_type = data.get("player_type")
 					joined_player.isAttacking = data.get("isAttacking")
 				

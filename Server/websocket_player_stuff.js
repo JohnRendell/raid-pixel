@@ -32,12 +32,11 @@ module.exports = (wss)=>{
                         "Player_GameID": parsed_message.Player_GameID,
                         "Player_posX": parsed_message.Player_posX,
                         "Player_posY": parsed_message.Player_posY,
-                        "isLeft": parsed_message.isLeft,
-                        "isRight": parsed_message.isRight,
-                        "isDown": parsed_message.isDown,
-                        "isUp": parsed_message.isUp,
+                        "direction_value": parsed_message.direction_value,
+                        "last_direction_value": parsed_message.last_direction_value,
                         "player_type": parsed_message.player_type,
                         "isAttacking": parsed_message.isAttacking,
+                        "isMoving": parsed_message.isMoving,
                         "Player_username": parsed_message.Player_username
                     }
                 )
