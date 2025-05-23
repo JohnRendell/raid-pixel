@@ -46,7 +46,7 @@ func render_player_profile_data(player_in_game_name_label: RichTextLabel, player
 func get_player_data(http_request):
 	var result = await ServerFetch.send_post_request(ServerFetch.backend_url + "playerInformation/playerData", { "username": PlayerGlobalScript.player_username })
 	
-	if result["status"] == "Success":
+	if result.has("status") and result["status"] == "Success":
 		PlayerGlobalScript.player_profile = result["profile"]
 		PlayerGlobalScript.player_diamond = result["diamond"]
 		PlayerGlobalScript.player_in_game_name = result["inGameName"]

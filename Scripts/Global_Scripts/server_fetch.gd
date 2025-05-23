@@ -2,6 +2,7 @@ extends Node
 
 var backend_url = "http://localhost:8080/"
 var httpRequest: HTTPRequest
+var isFetching = false
 
 func _ready() -> void:
 	httpRequest = HTTPRequest.new()
@@ -10,6 +11,9 @@ func _ready() -> void:
 		add_child(httpRequest)
 
 func send_post_request(route: String, data: Dictionary) -> Dictionary:
+	if isFetching:
+		return {}
+	
 	var url = route
 	var json_data = JSON.stringify(data)
 
@@ -18,6 +22,8 @@ func send_post_request(route: String, data: Dictionary) -> Dictionary:
 	]
 	
 	var err = httpRequest.request(url, headers, HTTPClient.METHOD_POST, json_data)
+	isFetching = true
+	
 	if err != OK:
 		print("Failed to send request")
 		return {}
@@ -27,6 +33,7 @@ func send_post_request(route: String, data: Dictionary) -> Dictionary:
 
 	var response_text = result[3].get_string_from_utf8()
 	var response_json = JSON.parse_string(response_text)
+	isFetching = false
 
 	return response_json
 

@@ -6,7 +6,6 @@
 [ext_resource type="FontFile" uid="uid://dp78nt8a4bjaq" path="res://Assets/Fonts/Pixelify_Sans/static/PixelifySans-Regular.ttf" id="3_6h5vk"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fiftr"]
-load_path = "res://.godot/imported/Ship_Body.png-7af7bb5e4e0177d81b93864752d2ce7b.ctex"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ixah"]
 texture = SubResource("CompressedTexture2D_fiftr")
@@ -292,7 +291,6 @@ texture = SubResource("CompressedTexture2D_fiftr")
 14:15/0/z_index = 2
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1ixah"]
-load_path = "res://.godot/imported/Ship_Front_Back.png-1ef4ea588784c1c32787e8e78e999a84.ctex"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2fmhe"]
 texture = SubResource("CompressedTexture2D_1ixah")

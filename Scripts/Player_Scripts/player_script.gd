@@ -20,42 +20,30 @@ func _ready() -> void:
 	PlayerGlobalScript.player_type = "Ally" if PlayerGlobalScript.current_scene.to_upper() == "LOBBY" else "Enemy"
 		
 func play_punch_animation():
-	if isRight or isLeft:
-		play_anim("side_punch_anim")
-	elif isUp:
-		play_anim("back_punch_anim")
-	elif isDown:
-		play_anim("front_punch_anim")
+	var dir_value = direction_value
+	
+	if isAttacking:
+		if abs(dir_value.x) <= -1 or abs(dir_value.x) <= 1:
+			play_anim("side_punch_anim")
+		
+		elif abs(dir_value.y) <= -1:
+			play_anim("back_punch_anim")
+		
+		elif abs(dir_value.y) >= 1:
+			play_anim("front_punch_anim")
+
 	
 func _process(_delta: float) -> void:
 	if prev_ign != PlayerGlobalScript.player_in_game_name:
 		prev_ign = PlayerGlobalScript.player_in_game_name
 		player_ign.text = PlayerGlobalScript.player_in_game_name
 		
-	var value = direction_value
 	isAttacking = Input.is_action_pressed("punch") and PlayerGlobalScript.isModalOpen == false
 	
-	if not isAttacking:
-		if isLeft or isRight:
-			if value.x <= -1 or value.x >= 1:
-				play_anim("side_walk_anim")
-			else:
-				play_anim("side_idle_anim")
-			player_sprite.flip_h = true if isLeft else false
-		
-		elif isUp:
-			if value.y <= -1:
-				play_anim("back_walk_anim")
-			else:
-				play_anim("back_idle_anim")
-		
-		elif isDown:
-			if value.y >= 1:
-				play_anim("front_walk_anim")
-			else:
-				play_anim("front_idle_anim")
-	else:
+	if isAttacking:
 		play_punch_animation()
+	else:
+		move_player_animation()
 	
 	player_sprite.visible = PlayerGlobalScript.main_player_spawned
 	
@@ -63,13 +51,40 @@ func _process(_delta: float) -> void:
 		prev_coordinates = Vector2($".".position.x, $".".position.y)
 		PlayerGlobalScript.player_pos_X = $".".position.x
 		PlayerGlobalScript.player_pos_Y = $".".position.y
-	
 	send_player_data()
+	
+func move_player_animation():
+	var dir_value = direction_value
+	var x = dir_value.x
+	var y = dir_value.y
+	
+	if isMoving:
+		if abs(x) > abs(y):
+			play_anim("side_walk_anim")
+			player_sprite.flip_h = x <= -1
+			
+		elif y <= -1:
+			play_anim("back_walk_anim")
+		
+		elif y >= 1:
+			play_anim("front_walk_anim")
+	else:
+		var last_dir_x = last_direction_value.x
+		var last_dir_y = last_direction_value.y
+		
+		if abs(last_dir_x) > abs(last_dir_y):
+			play_anim("side_idle_anim")
+			
+		elif last_dir_y <= -1:
+			play_anim("back_idle_anim")
+		
+		elif last_dir_y >= -1:
+			play_anim("front_idle_anim")
 	
 func play_anim(anim_name):
 	if player_anim.current_animation != anim_name:
 		player_anim.play(anim_name)
-	
+
 func send_player_data():
 	var current_state = {
 			"Socket_Name": "Player_Spawn",
@@ -78,10 +93,10 @@ func send_player_data():
 			"Player_GameID": PlayerGlobalScript.player_game_id,
 			"Player_posX": PlayerGlobalScript.player_pos_X,
 			"Player_posY": PlayerGlobalScript.player_pos_Y,
-			"isLeft": isLeft,
-			"isRight": isRight,
-			"isDown": isDown,
-			"isUp": isUp,
+			"isLeft": last_direction_value.x <= -1,
+			"isRight": last_direction_value.x >= 1,
+			"isDown": last_direction_value.y >= 1,
+			"isUp": last_direction_value.y <= -1,
 			"player_type": PlayerGlobalScript.player_type,
 			"isAttacking": isAttacking
 		}
