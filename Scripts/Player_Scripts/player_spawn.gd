@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 				
 					stored_players[data.get("Player_GameID")] = {
 						"Player": player,
-						"Position": Vector2(2350.0, 800.0),
+						"Position": Vector2(1700.0, 535.0),
 					}
 					
 					spawner_animation.play("spawner_spawn")

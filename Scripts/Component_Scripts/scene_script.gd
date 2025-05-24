@@ -49,7 +49,8 @@ func _ready() -> void:
 	await get_tree().create_timer(1.0).timeout
 	var get_time = await ServerFetch.send_post_request(ServerFetch.backend_url + "gameData/scene_cycle", { "scene_name": scene_name })
 	
-	time_render.text = "Fetching time..."
+	if time_render:
+		time_render.text = "Fetching time..."
 	
 	if get_time.has("status") and get_time["status"] == "Success":
 		time = get_time["time"]
@@ -76,7 +77,8 @@ func _process(delta: float):
 		wrap_around()
 		adjust_player_camera_limit()
 	
-	day_night_cycle(delta)
+	if time_render:
+		day_night_cycle(delta)
 	
 func adjust_player_camera_limit():
 	var playerCamera = main_player.player_camera
