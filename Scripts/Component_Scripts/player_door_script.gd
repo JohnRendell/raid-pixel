@@ -1,6 +1,6 @@
 extends Node
 
-@onready var animation = $Sprite2D/AnimationPlayer
+@onready var animation = $"Sprite/AnimationPlayer"
 @export var loading_modal: Control
 @export var ready_panel: Panel
 @export var go_to_scene_button: Button

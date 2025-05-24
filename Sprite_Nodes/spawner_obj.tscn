@@ -64,6 +64,7 @@ size = Vector2(84, 16)
 
 [node name="Spawner Body" type="CharacterBody2D"]
 z_index = 1
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_41euf")
 
 [node name="Obj Shadow" type="TextureRect" parent="."]
